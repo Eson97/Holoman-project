@@ -20,10 +20,10 @@ public class PlayerMovement : MonoBehaviour
     [Header("Dash Settings")]
     [Tooltip("Fuerza de impulso del dash")]
     [SerializeField, Rename("Force")] private float _dashingForce = 24f;
-    [Tooltip("Duración del dash (tambien inhabilita los demas controles)")]
-    [SerializeField, Rename("Duración")] private float _dashingTime = 0.2f;
-    [Tooltip("Tiempo de enfriamiento para volver a usar el dash")]
-    [SerializeField,Rename("Cooldown")]private float _dashingCooldown = 1f;
+    [Tooltip("Duracion del dash en segundos (tambien inhabilita los demas controles)")]
+    [SerializeField, Rename("Duration (s)")] private float _dashingTime = 0.2f;
+    [Tooltip("Tiempo de enfriamiento para volver a usar el dash en segundos")]
+    [SerializeField,Rename("Cooldown (s)")]private float _dashingCooldown = 1f;
 
 
     //-----Movement-----
