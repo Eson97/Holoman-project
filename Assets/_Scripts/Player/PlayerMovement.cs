@@ -14,8 +14,12 @@ public class PlayerMovement : MonoBehaviour
     [Header("Jump Settings")]
     [Tooltip("Fuerza de impulso al saltar")]
     [SerializeField, Rename("Force")] private float _jumpForce = 10f;
-    [Tooltip("Superficie (Layout) sobre la cual se puede saltar")]
+    [Tooltip("Fuerza de impulso al saltar en StickyWall (eje x)")]
+    [SerializeField, Rename("Force on wall")] private float _wallJumpForce = 0.5f;
+    [Tooltip("Suelo sobre el cual se puede saltar")]
     [SerializeField, Rename("Ground layout")] private LayerMask jumpableGround;
+    [Tooltip("Pared sobre la cual se puede saltar")]
+    [SerializeField, Rename("Sticky wall layout")] private LayerMask jumpableWall;
 
     [Header("Dash Settings")]
     [Tooltip("Fuerza de impulso del dash")]
@@ -29,6 +33,10 @@ public class PlayerMovement : MonoBehaviour
     //-----Movement-----
     private Vector2 _direction = Vector2.zero;
     private float _sprintMult = 1f;
+
+    //-----Jump-----
+    private bool _isOnStickyWall=false;
+    private bool _isWallJumping = false;
 
     //-----Dash-----
     private bool _canDash = true;
@@ -91,7 +99,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_isDashing) return;
+        if (_isDashing || _isWallJumping) return;
 
         var dirX = _direction.x * _movementSpeed * _sprintMult * Time.fixedDeltaTime;
 
@@ -100,7 +108,23 @@ public class PlayerMovement : MonoBehaviour
         else if (dirX < -0.01f)
             _spriteRenderer.flipX = false;
 
-        _rigidbody2D.velocity = new Vector2(dirX, _rigidbody2D.velocity.y);
+        if (isHittingNormalWall(_direction.normalized))
+            _rigidbody2D.velocity = new Vector2(0f, _rigidbody2D.velocity.y);
+        else
+            _rigidbody2D.velocity = new Vector2(dirX, _rigidbody2D.velocity.y);
+
+        if (isHittingStickyWall(_direction.normalized))
+            _rigidbody2D.velocity = Vector2.zero;
+    }
+
+    private bool isHittingNormalWall(Vector2 direction)
+    {
+        return Physics2D.BoxCast(_collider.bounds.center,_collider.bounds.size, 0f, direction, .1f, jumpableGround);
+    }
+    private bool isHittingStickyWall(Vector2 direction)
+    {
+        _isOnStickyWall = Physics2D.BoxCast(_collider.bounds.center, _collider.bounds.size, 0f, direction, .1f, jumpableWall);
+        return _isOnStickyWall;
     }
 
     private void GetDirection(InputAction.CallbackContext ctx) => _direction = ctx.ReadValue<Vector2>();
@@ -121,6 +145,9 @@ public class PlayerMovement : MonoBehaviour
     {
         if(_isDashing) return;
 
+        if (_isOnStickyWall)
+            StartCoroutine(WallJump());
+
         if (isGrounded())
             _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, _jumpForce);
     }
@@ -135,6 +162,13 @@ public class PlayerMovement : MonoBehaviour
     {
         //verifica si estamos parados sobre el suelo o no
         return Physics2D.BoxCast(_collider.bounds.center, _collider.bounds.size, 0f, Vector2.down, .1f, jumpableGround);
+    }
+    private IEnumerator WallJump()
+    {
+        _isWallJumping = true;
+        _rigidbody2D.velocity = new Vector2(_direction.normalized.x * -(_wallJumpForce), _jumpForce);
+        yield return new WaitForSeconds(.15f);
+        _isWallJumping = false;
     }
 
 
