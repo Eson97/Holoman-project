@@ -418,10 +418,6 @@ MonoBehaviour:
     m_ActionName: Player/Dash[/Mouse/rightButton]
   - m_PersistentCalls:
       m_Calls: []
-    m_ActionId: 80e96667-9ed6-4e29-9b77-23a0c3e8a1dc
-    m_ActionName: Player/Attack[/Mouse/leftButton]
-  - m_PersistentCalls:
-      m_Calls: []
     m_ActionId: c29cdbdb-8171-4e41-9dfa-134f4f992899
     m_ActionName: Player/Run[/Keyboard/shift]
   - m_PersistentCalls:
@@ -464,6 +460,18 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: a2927174-1363-4798-9e1e-d2b13c14a80e
     m_ActionName: UI/TrackedDeviceOrientation
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 99f37578-5380-4da6-bee7-49e3baef20f0
+    m_ActionName: Player/AttackUp[/Keyboard/w,/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 1b6f43f7-4908-46f4-ae10-56f59e14ade3
+    m_ActionName: Player/AttackDown[/Keyboard/s,/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 6f0c2f99-a8da-4acb-a980-8b99222049a7
+    m_ActionName: Player/Attack[/Mouse/leftButton]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Gamepad
   m_DefaultActionMap: Player
