@@ -7,15 +7,15 @@ public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement Settings")]
     [Tooltip("Velocidad de movimiento sin sprint")]
-    [SerializeField] private float _movementSpeed = 5f;
+    [SerializeField, Rename("Speed")] private float _movementSpeed = 300f;
     [Tooltip("Multiplicador de velocidad al correr, formula: \n -> speed * multiplier = total_speed")]
     [SerializeField] private float _sprintMultiplier = 1.5f;
 
     [Header("Jump Settings")]
     [Tooltip("Fuerza de impulso al saltar")]
-    [SerializeField] private float _jumpForce = 10f;
+    [SerializeField, Rename("Force")] private float _jumpForce = 10f;
     [Tooltip("Superficie (Layout) sobre la cual se puede saltar")]
-    [SerializeField] private LayerMask jumpableGround;
+    [SerializeField, Rename("Ground layout")] private LayerMask jumpableGround;
 
     //-----Movement-----
     private Vector2 _direction = Vector2.zero;
@@ -25,10 +25,10 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D _rigidbody2D;
     private SpriteRenderer _spriteRenderer;
     private BoxCollider2D _collider;
+    private PlayerInput _input;
     //private Animator _animator;
 
     //-----Inputs-----
-    private PlayerInput _input;
     private InputAction _moveAction;
     private InputAction _runAction;
     private InputAction _jumpAction;
@@ -45,7 +45,6 @@ public class PlayerMovement : MonoBehaviour
         _runAction = _input.actions["Run"];
         _jumpAction = _input.actions["Jump"];
     }
-
     private void OnEnable()
     {
         _moveAction.performed += GetDirection;
@@ -57,7 +56,6 @@ public class PlayerMovement : MonoBehaviour
         _jumpAction.performed += StartJump;
         _jumpAction.canceled += StopJump;
     }
-
     private void OnDisable()
     {
         _moveAction.performed -= GetDirection;

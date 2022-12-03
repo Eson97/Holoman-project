@@ -16,9 +16,7 @@ public class PlayerInteract : MonoBehaviour
         _input = GetComponent<PlayerInput>();
         _interactAction = _input.actions["Interact"];
 
-        #if UNITY_EDITOR
         InteractDelegate += () => Debug.Log("Interact button Pressed");
-        #endif
     }
 
     private void OnEnable() => _interactAction.performed += Interact;
