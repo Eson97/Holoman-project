@@ -99,6 +99,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        Debug.Log(_rigidbody2D.velocity.x);
         if (_isDashing || _isWallJumping) return;
 
         var dirX = _direction.x * _movementSpeed * _sprintMult * Time.fixedDeltaTime;
@@ -119,7 +120,7 @@ public class PlayerMovement : MonoBehaviour
 
     private bool isHittingNormalWall(Vector2 direction)
     {
-        return Physics2D.BoxCast(_collider.bounds.center,_collider.bounds.size, 0f, direction, .1f, jumpableGround);
+        return Physics2D.BoxCast(_collider.bounds.center,new Vector3(_collider.bounds.size.x, _collider.bounds.size.y-0.01f), 0f, direction, .1f, jumpableGround);
     }
     private bool isHittingStickyWall(Vector2 direction)
     {
