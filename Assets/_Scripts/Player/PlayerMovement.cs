@@ -159,17 +159,17 @@ public class PlayerMovement : MonoBehaviour
         if (_rigidbody2D.velocity.y > 0.001f)
             _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, 0);
     }
-    private bool isGrounded()
-    {
-        //verifica si estamos parados sobre el suelo o no
-        return Physics2D.BoxCast(_collider.bounds.center, _collider.bounds.size, 0f, Vector2.down, .1f, jumpableGround);
-    }
     private IEnumerator WallJump()
     {
         _isWallJumping = true;
         _rigidbody2D.velocity = new Vector2(_direction.normalized.x * -(_wallJumpForce), _jumpForce);
         yield return new WaitForSeconds(.15f);
         _isWallJumping = false;
+    }
+    private bool isGrounded()
+    {
+        //verifica si estamos parados sobre el suelo o no
+        return Physics2D.BoxCast(_collider.bounds.center, _collider.bounds.size, 0f, Vector2.down, .1f, jumpableGround);
     }
 
 
