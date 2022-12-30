@@ -18,7 +18,6 @@ public class PlayerInteract : MonoBehaviour
     }
 
     private void OnEnable() => _interactAction.performed += Interact;
-
     private void OnDisable() => _interactAction.performed -= Interact;
 
     private void Interact(InputAction.CallbackContext ctx)

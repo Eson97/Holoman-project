@@ -23,13 +23,13 @@ public class PlayerAttack : MonoBehaviour
         _attackUpAction = _input.actions["AttackUp"];
         _attackDownAction = _input.actions["AttackDown"];
     }
+    
     private void OnEnable()
     {
         _attackAction.performed += Attack;
         _attackUpAction.performed += AttackUp;
         _attackDownAction.performed += AttackDown;
     }
-
     private void OnDisable()
     {
         _attackAction.performed -= Attack;

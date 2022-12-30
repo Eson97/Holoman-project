@@ -37,8 +37,6 @@ public class PlayerExecution : MonoBehaviour
         _execDirAction.canceled += ResetExecutionDir;
         _aimModeAction.canceled += FinishAimMode;
     }
-
-
     private void OnDisable()
     {
         _execDirAction.performed -= GetExecutionDir;
@@ -84,7 +82,7 @@ public class PlayerExecution : MonoBehaviour
     private void StartExecution()
     {
         if (PlayerStateManager.Instance.CurrentState != PlayerState.Aiming) return;
-        Debug.Log("Exec Start");
+        
         PlayerStateManager.Instance.ChangeState(PlayerState.Executing);
         if (_canExec)
             StartCoroutine(Exec());
@@ -92,14 +90,14 @@ public class PlayerExecution : MonoBehaviour
 
     private IEnumerator Exec()
     {
-        _rigidbody2D.velocity = _executionDir *35;
+        _rigidbody2D.velocity = _executionDir * 35;
 
         yield return new WaitForSeconds(.15f);
 
         _rigidbody2D.gravityScale = _originalGravity;
+        _rigidbody2D.velocity = Vector2.zero;
+
         PlayerStateManager.Instance.ChangeState(PlayerState.Default);
-
-
     }
 
 }
