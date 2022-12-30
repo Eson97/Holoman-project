@@ -6,6 +6,10 @@ using UnityEngine.InputSystem;
 
 public class PlayerExecution : MonoBehaviour
 {
+    [Header("Aiming Settings")]
+    [Tooltip("Velocidad de caida mientras se apunta (min: 0, max: 1")]
+    [SerializeField, Rename("Falling Speed")] private float _aimingFallSpeed = 0.1f;
+
     private Vector2 _executionDir = Vector2.zero;
     private bool _canExec = true;
     private float _originalGravity;
@@ -52,7 +56,7 @@ public class PlayerExecution : MonoBehaviour
         if (PlayerStateManager.Instance.CurrentState != PlayerState.Aiming) return;
 
         Gizmos.color = Color.red;
-        Gizmos.DrawRay(transform.position, _executionDir*5);
+        Gizmos.DrawRay(transform.position, _executionDir * 5);
     }
 
     private void GetExecutionDir(InputAction.CallbackContext ctx) => _executionDir = ctx.ReadValue<Vector2>();
@@ -63,7 +67,7 @@ public class PlayerExecution : MonoBehaviour
         if (PlayerStateManager.Instance.CurrentState != PlayerState.Default) return;
         PlayerStateManager.Instance.ChangeState(PlayerState.Aiming);
 
-        _rigidbody2D.gravityScale = 0f;
+        _rigidbody2D.gravityScale = _aimingFallSpeed;
         _rigidbody2D.velocity = Vector2.zero;
     }
     private void FinishAimMode(InputAction.CallbackContext ctx)
