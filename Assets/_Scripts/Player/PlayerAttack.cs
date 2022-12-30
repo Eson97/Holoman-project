@@ -40,17 +40,19 @@ public class PlayerAttack : MonoBehaviour
     private void Attack(InputAction.CallbackContext ctx)
     {
         if (_attackUpAction.WasPerformedThisFrame() || _attackDownAction.WasPerformedThisFrame()) return;
-
+        if (PlayerStateManager.Instance.CurrentState != PlayerState.Default) return;
         Debug.Log("Basic");
         AttackDelegate?.Invoke();
     }
     private void AttackUp(InputAction.CallbackContext ctx)
     {
+        if (PlayerStateManager.Instance.CurrentState != PlayerState.Default) return;
         Debug.Log("Up");
         AttackUpDelegate?.Invoke();
     }
     private void AttackDown(InputAction.CallbackContext ctx)
     {
+        if (PlayerStateManager.Instance.CurrentState != PlayerState.Default) return;
         Debug.Log("Down");
         AttackDownDelegate?.Invoke();
     }

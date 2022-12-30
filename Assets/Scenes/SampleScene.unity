@@ -123,6 +123,50 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &28950844
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 28950846}
+  - component: {fileID: 28950845}
+  m_Layer: 0
+  m_Name: PlayerStateManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &28950845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 28950844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e22899ac93803740bee4a620eb3bc51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &28950846
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 28950844}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.9412933, y: 3.8387165, z: -9.923316}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &110257393
 GameObject:
   m_ObjectHideFlags: 0
@@ -1271,18 +1315,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2033272944769487466, guid: 4cf1baf71caab4d4eb6e02682db68c09, type: 3}
-      propertyPath: m_GravityScale
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 2033272944769487466, guid: 4cf1baf71caab4d4eb6e02682db68c09, type: 3}
-      propertyPath: m_CollisionDetection
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2033272944769487469, guid: 4cf1baf71caab4d4eb6e02682db68c09, type: 3}
-      propertyPath: _jumpForce
-      value: 22
-      objectReference: {fileID: 0}
     - target: {fileID: 2033272944769487469, guid: 4cf1baf71caab4d4eb6e02682db68c09, type: 3}
       propertyPath: Wall.m_Bits
       value: 256
@@ -1290,30 +1322,6 @@ PrefabInstance:
     - target: {fileID: 2033272944769487469, guid: 4cf1baf71caab4d4eb6e02682db68c09, type: 3}
       propertyPath: wall.m_Bits
       value: 256
-      objectReference: {fileID: 0}
-    - target: {fileID: 2033272944769487469, guid: 4cf1baf71caab4d4eb6e02682db68c09, type: 3}
-      propertyPath: _dashingTime
-      value: 0.15
-      objectReference: {fileID: 0}
-    - target: {fileID: 2033272944769487469, guid: 4cf1baf71caab4d4eb6e02682db68c09, type: 3}
-      propertyPath: _dashingForce
-      value: 35
-      objectReference: {fileID: 0}
-    - target: {fileID: 2033272944769487469, guid: 4cf1baf71caab4d4eb6e02682db68c09, type: 3}
-      propertyPath: _movementSpeed
-      value: 550
-      objectReference: {fileID: 0}
-    - target: {fileID: 2033272944769487469, guid: 4cf1baf71caab4d4eb6e02682db68c09, type: 3}
-      propertyPath: _wallJumpForce
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 2033272944769487469, guid: 4cf1baf71caab4d4eb6e02682db68c09, type: 3}
-      propertyPath: _dashingCooldown
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2033272944769487469, guid: 4cf1baf71caab4d4eb6e02682db68c09, type: 3}
-      propertyPath: jumpableWall.m_Bits
-      value: 128
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4cf1baf71caab4d4eb6e02682db68c09, type: 3}

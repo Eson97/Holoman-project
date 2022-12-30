@@ -76,6 +76,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "ExecDir",
+                    "type": "Value",
+                    "id": "4cac42a4-963b-4dd9-a856-ecc34a94a5d5",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "AimMode",
+                    "type": "Button",
+                    "id": "1c1535a8-dfa7-4398-829c-73adf7e429c5",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Hold(duration=0.1,pressPoint=0.1)",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -269,7 +287,7 @@
                 {
                     "name": "",
                     "id": "7de30e14-642e-4d8f-b57c-8a522a59264f",
-                    "path": "<Gamepad>/buttonNorth",
+                    "path": "<Gamepad>/buttonEast",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -494,6 +512,28 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ba65631d-ad1f-4fda-a1c6-ced44ea47072",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "ExecDir",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bc3d9de4-d46f-43e6-a2da-ad5f6e2de969",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "AimMode",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

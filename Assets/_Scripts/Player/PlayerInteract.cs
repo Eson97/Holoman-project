@@ -9,20 +9,25 @@ public class PlayerInteract : MonoBehaviour
     private InputAction _interactAction;
     private PlayerInput _input;
 
-    public Action InteractDelegate;
+    public static Queue<Action> ActionQueue = new Queue<Action>();
 
     private void Awake()
     {
         _input = GetComponent<PlayerInput>();
         _interactAction = _input.actions["Interact"];
-
-        InteractDelegate += () => Debug.Log("Interact button Pressed");
     }
 
     private void OnEnable() => _interactAction.performed += Interact;
 
     private void OnDisable() => _interactAction.performed -= Interact;
 
-    private void Interact(InputAction.CallbackContext ctx) => InteractDelegate?.Invoke();
+    private void Interact(InputAction.CallbackContext ctx)
+    {
+        if (PlayerStateManager.Instance.CurrentState != PlayerState.Default) return;
+        Debug.Log("Interact button Pressed");
+        if (ActionQueue.Count <= 0) return;
 
+        var current = ActionQueue.Dequeue();
+        current?.Invoke();
+    }
 }

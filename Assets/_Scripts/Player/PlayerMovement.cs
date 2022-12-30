@@ -34,13 +34,8 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 _direction = Vector2.zero;
     private float _sprintMult = 1f;
 
-    //-----Jump-----
-    private bool _isOnStickyWall=false;
-    private bool _isWallJumping = false;
-
     //-----Dash-----
     private bool _canDash = true;
-    private bool _isDashing = false;
 
     //-----Components-----
     private Rigidbody2D _rigidbody2D;
@@ -99,8 +94,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Debug.Log(_rigidbody2D.velocity.x);
-        if (_isDashing || _isWallJumping) return;
+        if (PlayerStateManager.Instance.CurrentState == PlayerState.Dashing) return;
+        if (PlayerStateManager.Instance.CurrentState == PlayerState.WallJumping) return;
+        if (PlayerStateManager.Instance.CurrentState == PlayerState.Aiming) return;
+        if (PlayerStateManager.Instance.CurrentState == PlayerState.Executing) return;
 
         var dirX = _direction.x * _movementSpeed * _sprintMult * Time.fixedDeltaTime;
 
@@ -120,12 +117,16 @@ public class PlayerMovement : MonoBehaviour
 
     private bool isHittingNormalWall(Vector2 direction)
     {
-        return Physics2D.BoxCast(_collider.bounds.center,new Vector3(_collider.bounds.size.x, _collider.bounds.size.y-0.01f), 0f, direction, .1f, jumpableGround);
+        return Physics2D.BoxCast(_collider.bounds.center, new Vector3(_collider.bounds.size.x, _collider.bounds.size.y - 0.01f), 0f, direction, .1f, jumpableGround); 
     }
     private bool isHittingStickyWall(Vector2 direction)
     {
-        _isOnStickyWall = Physics2D.BoxCast(_collider.bounds.center, _collider.bounds.size, 0f, direction, .1f, jumpableWall);
-        return _isOnStickyWall;
+        var result = Physics2D.BoxCast(_collider.bounds.center, _collider.bounds.size, 0f, direction, .1f, jumpableWall);
+
+        if (result && PlayerStateManager.Instance.CurrentState != PlayerState.OnStickyWall)
+            PlayerStateManager.Instance.ChangeState(PlayerState.OnStickyWall);
+
+        return result;
     }
 
     private void GetDirection(InputAction.CallbackContext ctx) => _direction = ctx.ReadValue<Vector2>();
@@ -133,38 +134,39 @@ public class PlayerMovement : MonoBehaviour
 
     private void StartRunning(InputAction.CallbackContext ctx)
     {
-        if(_isDashing) return;
+        if (PlayerStateManager.Instance.CurrentState == PlayerState.Dashing) return;
         _sprintMult = _sprintMultiplier;
     }
     private void StopRunning(InputAction.CallbackContext ctx)
     {
-        if (_isDashing) return;
+        if (PlayerStateManager.Instance.CurrentState == PlayerState.Dashing) return;
         _sprintMult = 1f;
     }
 
     private void StartJump(InputAction.CallbackContext ctx)
     {
-        if(_isDashing) return;
+        if (PlayerStateManager.Instance.CurrentState == PlayerState.Dashing) return;
 
-        if (_isOnStickyWall)
+        if(PlayerStateManager.Instance.CurrentState == PlayerState.OnStickyWall)
             StartCoroutine(WallJump());
 
-        if (isGrounded())
+        if (isGrounded() && PlayerStateManager.Instance.CurrentState == PlayerState.Default)
             _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, _jumpForce);
     }
     private void StopJump(InputAction.CallbackContext ctx)
     {
-        if (_isDashing) return;
+        if (PlayerStateManager.Instance.CurrentState == PlayerState.Dashing) return;
+
 
         if (_rigidbody2D.velocity.y > 0.001f)
             _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, 0);
     }
     private IEnumerator WallJump()
     {
-        _isWallJumping = true;
+        PlayerStateManager.Instance.ChangeState(PlayerState.WallJumping);
         _rigidbody2D.velocity = new Vector2(_direction.normalized.x * -(_wallJumpForce), _jumpForce);
         yield return new WaitForSeconds(.15f);
-        _isWallJumping = false;
+        PlayerStateManager.Instance.ChangeState(PlayerState.Default);
     }
     private bool isGrounded()
     {
@@ -175,13 +177,14 @@ public class PlayerMovement : MonoBehaviour
 
     private void StartDash(InputAction.CallbackContext obj)
     {
+        if (PlayerStateManager.Instance.CurrentState == PlayerState.Aiming) return;
         if (_canDash)
             StartCoroutine(Dash());
     }
     private IEnumerator Dash()
     {
         _canDash = false;
-        _isDashing = true;
+        PlayerStateManager.Instance.ChangeState(PlayerState.Dashing);
         var originalGravity = _rigidbody2D.gravityScale;
         _rigidbody2D.gravityScale = 0f;
         var dashDir = _spriteRenderer.flipX
@@ -194,7 +197,7 @@ public class PlayerMovement : MonoBehaviour
         _trailRenderer.emitting = false;
 
         _rigidbody2D.gravityScale = originalGravity;
-        _isDashing = false;
+        PlayerStateManager.Instance.ChangeState(PlayerState.Default);
 
         yield return new WaitForSeconds(_dashingCooldown);
         _canDash = true;

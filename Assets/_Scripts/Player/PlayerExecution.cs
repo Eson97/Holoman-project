@@ -1,0 +1,101 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public class PlayerExecution : MonoBehaviour
+{
+    private Vector2 _executionDir = Vector2.zero;
+    private bool _canExec = true;
+    private float _originalGravity;
+
+    private InputAction _execDirAction;
+    private InputAction _aimModeAction;
+    private PlayerInput _input;
+
+    private Rigidbody2D _rigidbody2D;
+
+    private void Awake()
+    {
+        _rigidbody2D = GetComponent<Rigidbody2D>();
+        _input = GetComponent<PlayerInput>();
+
+        _execDirAction = _input.actions["ExecDir"];
+        _aimModeAction = _input.actions["AimMode"];
+    }
+
+    private void OnEnable()
+    {
+        _execDirAction.performed += GetExecutionDir;
+        _aimModeAction.performed += StartAimMode;
+
+        _execDirAction.canceled += ResetExecutionDir;
+        _aimModeAction.canceled += FinishAimMode;
+    }
+
+
+    private void OnDisable()
+    {
+        _execDirAction.performed -= GetExecutionDir;
+        _aimModeAction.performed -= StartAimMode;
+
+        _execDirAction.canceled -= ResetExecutionDir;
+        _aimModeAction.canceled -= FinishAimMode;
+    }
+
+    private void Start() => _originalGravity = _rigidbody2D.gravityScale;
+
+    private void OnDrawGizmos()
+    {
+        if (PlayerStateManager.Instance == null) return;
+        if (PlayerStateManager.Instance.CurrentState != PlayerState.Aiming) return;
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.position, _executionDir*5);
+    }
+
+    private void GetExecutionDir(InputAction.CallbackContext ctx) => _executionDir = ctx.ReadValue<Vector2>();
+    private void ResetExecutionDir(InputAction.CallbackContext ctx) => _executionDir = Vector2.zero;
+
+    private void StartAimMode(InputAction.CallbackContext ctx)
+    {
+        if (PlayerStateManager.Instance.CurrentState != PlayerState.Default) return;
+        PlayerStateManager.Instance.ChangeState(PlayerState.Aiming);
+
+        _rigidbody2D.gravityScale = 0f;
+        _rigidbody2D.velocity = Vector2.zero;
+    }
+    private void FinishAimMode(InputAction.CallbackContext ctx)
+    {
+        if (_executionDir != Vector2.zero)
+            StartExecution();
+        else
+        {
+            _rigidbody2D.gravityScale = _originalGravity;
+            PlayerStateManager.Instance.ChangeState(PlayerState.Default);
+        }
+    }
+
+    private void StartExecution()
+    {
+        if (PlayerStateManager.Instance.CurrentState != PlayerState.Aiming) return;
+        Debug.Log("Exec Start");
+        PlayerStateManager.Instance.ChangeState(PlayerState.Executing);
+        if (_canExec)
+            StartCoroutine(Exec());
+    }
+
+    private IEnumerator Exec()
+    {
+        _rigidbody2D.velocity = _executionDir *35;
+
+        yield return new WaitForSeconds(.15f);
+
+        _rigidbody2D.gravityScale = _originalGravity;
+        PlayerStateManager.Instance.ChangeState(PlayerState.Default);
+
+
+    }
+
+}
