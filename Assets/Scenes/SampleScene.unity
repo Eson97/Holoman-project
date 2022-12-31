@@ -1323,5 +1323,9 @@ PrefabInstance:
       propertyPath: wall.m_Bits
       value: 256
       objectReference: {fileID: 0}
+    - target: {fileID: 8447904648922601221, guid: 4cf1baf71caab4d4eb6e02682db68c09, type: 3}
+      propertyPath: _Momentum
+      value: 0.1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4cf1baf71caab4d4eb6e02682db68c09, type: 3}

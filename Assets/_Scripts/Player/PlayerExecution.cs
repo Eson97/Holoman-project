@@ -9,6 +9,8 @@ public class PlayerExecution : MonoBehaviour
     [Header("Aiming Settings")]
     [Tooltip("Velocidad de caida mientras se apunta (min: 0, max: 1")]
     [SerializeField, Rename("Falling Speed")] private float _aimingFallSpeed = 0.1f;
+    [Tooltip("Velocidad en X mantenida tras apuntar (min: 0, max: 1)")]
+    [SerializeField, Rename("Momentum on X")] private float _Momentum = 0.1f;
 
     private Vector2 _executionDir = Vector2.zero;
     private bool _canExec = true;
@@ -65,8 +67,8 @@ public class PlayerExecution : MonoBehaviour
         if (PlayerStateManager.Instance.CurrentState != PlayerState.Default) return;
         PlayerStateManager.Instance.ChangeState(PlayerState.Aiming);
 
+        _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x * _Momentum, 0.01f);
         _rigidbody2D.gravityScale = _aimingFallSpeed;
-        _rigidbody2D.velocity = Vector2.zero;
     }
     private void FinishAimMode(InputAction.CallbackContext ctx)
     {
