@@ -78,7 +78,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "ExecDir",
+                    "name": "Direction",
                     "type": "Value",
                     "id": "4cac42a4-963b-4dd9-a856-ecc34a94a5d5",
                     "expectedControlType": "Vector2",
@@ -92,7 +92,7 @@
                     "id": "1c1535a8-dfa7-4398-829c-73adf7e429c5",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Hold(duration=0.1,pressPoint=0.1)",
+                    "interactions": "",
                     "initialStateCheck": false
                 }
             ],
@@ -522,7 +522,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "ExecDir",
+                    "action": "Direction",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

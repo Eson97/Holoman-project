@@ -15,6 +15,7 @@ public class PlayerExecution : MonoBehaviour
     private Vector2 _executionDir = Vector2.zero;
     private bool _canExec = true;
     private float _originalGravity;
+    private int _execCount = 0;
 
     private InputAction _execDirAction;
     private InputAction _aimModeAction;
@@ -27,7 +28,7 @@ public class PlayerExecution : MonoBehaviour
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _input = GetComponent<PlayerInput>();
 
-        _execDirAction = _input.actions["ExecDir"];
+        _execDirAction = _input.actions["Direction"];
         _aimModeAction = _input.actions["AimMode"];
     }
 
@@ -64,6 +65,7 @@ public class PlayerExecution : MonoBehaviour
 
     private void StartAimMode(InputAction.CallbackContext ctx)
     {
+        if (!_canExec) return;
         if (PlayerStateManager.Instance.CurrentState != PlayerState.Default) return;
         PlayerStateManager.Instance.ChangeState(PlayerState.Aiming);
 
@@ -86,20 +88,41 @@ public class PlayerExecution : MonoBehaviour
         if (PlayerStateManager.Instance.CurrentState != PlayerState.Aiming) return;
         
         PlayerStateManager.Instance.ChangeState(PlayerState.Executing);
-        if (_canExec)
-            StartCoroutine(Exec());
+        _execCount++;
+        StartCoroutine(Exec());
     }
+
+    //private IEnumerator Exec()
+    //{
+    //    _rigidbody2D.velocity = _executionDir * 35;
+
+    //    yield return new WaitForSeconds(.15f);
+
+    //    _rigidbody2D.gravityScale = _originalGravity;
+    //    _rigidbody2D.velocity = Vector2.zero;
+
+    //    PlayerStateManager.Instance.ChangeState(PlayerState.Default);
+    //}
 
     private IEnumerator Exec()
     {
         _rigidbody2D.velocity = _executionDir * 35;
 
         yield return new WaitForSeconds(.15f);
-
-        _rigidbody2D.gravityScale = _originalGravity;
+        
         _rigidbody2D.velocity = Vector2.zero;
 
-        PlayerStateManager.Instance.ChangeState(PlayerState.Default);
+        if (_execCount >= 4)
+        {
+            _execCount = 0;
+            _rigidbody2D.gravityScale = _originalGravity;
+            PlayerStateManager.Instance.ChangeState(PlayerState.Default);
+        }
+        else
+            PlayerStateManager.Instance.ChangeState(PlayerState.Aiming);
+                
+        StartExecution();
+
     }
 
 }
