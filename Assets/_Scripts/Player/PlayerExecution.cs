@@ -7,14 +7,12 @@ using UnityEngine.InputSystem;
 public class PlayerExecution : MonoBehaviour
 {
     [Header("Aiming Settings")]
-    [Tooltip("Velocidad de caida mientras se apunta (min: 0, max: 1")]
-    [SerializeField, Rename("Falling Speed")] private float _aimingFallSpeed = 0.1f;
-    [Tooltip("Velocidad en X mantenida tras apuntar (min: 0, max: 1)")]
-    [SerializeField, Rename("Momentum on X")] private float _Momentum = 0.1f;
+    [Tooltip("Velocidad del juego mientras se apunta (min: 0 -> freeze, max:1 -> nomral)")]
+    [SerializeField, Rename("Slow down factor")] private float _slowFactor = 0.05f;
+
 
     private Vector2 _executionDir = Vector2.zero;
     private bool _canExec = true;
-    private float _originalGravity;
 
     private InputAction _execDirAction;
     private InputAction _aimModeAction;
@@ -38,6 +36,7 @@ public class PlayerExecution : MonoBehaviour
 
         _execDirAction.canceled += ResetExecutionDir;
         _aimModeAction.canceled += FinishAimMode;
+
     }
     private void OnDisable()
     {
@@ -48,7 +47,11 @@ public class PlayerExecution : MonoBehaviour
         _aimModeAction.canceled -= FinishAimMode;
     }
 
-    private void Start() => _originalGravity = _rigidbody2D.gravityScale;
+    private void Start()
+    {
+        PlayerStateManager.Instance.OnAiming += StartSlowMotion;
+        PlayerStateManager.Instance.OnBeforeStateChanged += EndSlowMotion;
+    }
 
     private void OnDrawGizmos()
     {
@@ -67,19 +70,13 @@ public class PlayerExecution : MonoBehaviour
         if (!_canExec) return;
         if (PlayerStateManager.Instance.CurrentState != PlayerState.Default) return;
         PlayerStateManager.Instance.ChangeState(PlayerState.Aiming);
-
-        _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x * _Momentum, 0.01f);
-        _rigidbody2D.gravityScale = _aimingFallSpeed;
     }
     private void FinishAimMode(InputAction.CallbackContext ctx)
     {
         if (_executionDir != Vector2.zero)
             StartExecution();
         else
-        {
-            _rigidbody2D.gravityScale = _originalGravity;
             PlayerStateManager.Instance.ChangeState(PlayerState.Default);
-        }
     }
 
     private void StartExecution()
@@ -92,15 +89,31 @@ public class PlayerExecution : MonoBehaviour
 
     private IEnumerator Exec()
     {
+        var originalGravity = _rigidbody2D.gravityScale;
+
         _rigidbody2D.velocity = _executionDir * 35;
         _rigidbody2D.gravityScale = 0f;
 
         yield return new WaitForSeconds(.15f);
 
-        _rigidbody2D.gravityScale = _originalGravity;
+        _rigidbody2D.gravityScale = originalGravity;
         _rigidbody2D.velocity = Vector2.zero;
 
         PlayerStateManager.Instance.ChangeState(PlayerState.Default);
     }
 
+    private void StartSlowMotion()
+    {
+        Time.timeScale = _slowFactor;
+        Time.fixedDeltaTime = Time.timeScale * 0.02f;
+    }
+
+    private void EndSlowMotion()
+    {
+        if(PlayerStateManager.Instance.CurrentState == PlayerState.Aiming)
+        {
+            Time.timeScale = 1f;
+            Time.fixedDeltaTime = Time.timeScale * 0.02f;
+        }
+    }
 }
