@@ -92,6 +92,17 @@ public class PlayerMovement : MonoBehaviour
         _dashAction.performed -= StartDash;
     }
 
+    private void Update()
+    {
+        var dirX = _rigidbody2D.velocity.x;
+
+        if (dirX > 0.01f)
+            _spriteRenderer.flipX = false;
+        else if (dirX < -0.01f)
+            _spriteRenderer.flipX = true;
+
+    }
+
     private void FixedUpdate()
     {
         if (PlayerStateManager.Instance.CurrentState == PlayerState.Dashing) return;
@@ -100,11 +111,6 @@ public class PlayerMovement : MonoBehaviour
         if (PlayerStateManager.Instance.CurrentState == PlayerState.Executing) return;
 
         var dirX = _direction.x * _movementSpeed * _sprintMult * Time.fixedDeltaTime;
-
-        if (dirX > 0.01f)
-            _spriteRenderer.flipX = true;
-        else if (dirX < -0.01f)
-            _spriteRenderer.flipX = false;
 
         if (isHittingNormalWall(_direction.normalized))
             _rigidbody2D.velocity = new Vector2(0f, _rigidbody2D.velocity.y);
@@ -121,10 +127,12 @@ public class PlayerMovement : MonoBehaviour
     }
     private bool isHittingStickyWall(Vector2 direction)
     {
-        var result = Physics2D.BoxCast(_collider.bounds.center, _collider.bounds.size, 0f, direction, .1f, jumpableWall);
+        //var result = Physics2D.BoxCast(_collider.bounds.center, _collider.bounds.size, 0f, direction, .1f, jumpableWall);
 
-        if (result && PlayerStateManager.Instance.CurrentState != PlayerState.OnStickyWall)
-            PlayerStateManager.Instance.ChangeState(PlayerState.OnStickyWall);
+        //if (result && PlayerStateManager.Instance.CurrentState != PlayerState.OnStickyWall)
+        //    PlayerStateManager.Instance.ChangeState(PlayerState.OnStickyWall);
+
+        var result = PlayerStateManager.Instance.CurrentState == PlayerState.OnStickyWall;
 
         return result;
     }
