@@ -34,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 _direction = Vector2.zero;
     private float _sprintMult = 1f;
 
+
     //-----Dash-----
     private bool _canDash = true;
 
@@ -43,7 +44,7 @@ public class PlayerMovement : MonoBehaviour
     private SpriteRenderer _spriteRenderer;
     private BoxCollider2D _collider;
     private PlayerInput _input;
-    //private Animator _animator;
+    private Animator _animator;
 
     //-----Inputs-----
     private InputAction _moveAction;
@@ -58,7 +59,7 @@ public class PlayerMovement : MonoBehaviour
         _trailRenderer = GetComponent<TrailRenderer>();
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _collider = GetComponent<BoxCollider2D>();
-        //_animator = GetComponent<Animator>();
+        _animator = GetComponent<Animator>();
 
         _moveAction = _input.actions["Move"];
         _runAction = _input.actions["Run"];
@@ -101,6 +102,10 @@ public class PlayerMovement : MonoBehaviour
         else if (dirX < -0.01f)
             _spriteRenderer.flipX = true;
 
+        if (PlayerStateManager.Instance.CurrentState == PlayerState.Default)
+            _animator.SetFloat("Speed", System.Math.Abs(dirX));
+        else
+            _animator.SetFloat("Speed", 0.001f);
     }
 
     private void FixedUpdate()
@@ -117,16 +122,15 @@ public class PlayerMovement : MonoBehaviour
         else
             _rigidbody2D.velocity = new Vector2(dirX, _rigidbody2D.velocity.y);
 
-        if (isHittingStickyWall())
+        if (isHittingStickyWall(_direction.normalized))
             _rigidbody2D.velocity = Vector2.zero;
     }
 
-    private bool isHittingNormalWall(Vector2 direction)
-    {
-        return Physics2D.BoxCast(_collider.bounds.center, new Vector3(_collider.bounds.size.x, _collider.bounds.size.y - 0.01f), 0f, direction, .1f, jumpableGround); 
-    }
-    private bool isHittingStickyWall() => PlayerStateManager.Instance.CurrentState == PlayerState.OnStickyWall;
-    
+    private bool isHittingNormalWall(Vector2 direction) => 
+        Physics2D.BoxCast(_collider.bounds.center, new Vector2(_collider.bounds.size.x, _collider.bounds.size.y - 0.01f), 0f, direction, .1f, jumpableGround);
+    private bool isHittingStickyWall(Vector2 direction) => 
+        PlayerStateManager.Instance.CurrentState == PlayerState.OnStickyWall &&
+        Physics2D.BoxCast(_collider.bounds.center, new Vector2(_collider.bounds.size.x, _collider.bounds.size.y - 0.01f), 0f, direction, .1f, jumpableWall);
 
     private void GetDirection(InputAction.CallbackContext ctx) => _direction = ctx.ReadValue<Vector2>();
     private void resetDirection(InputAction.CallbackContext ctx) => _direction = Vector2.zero;

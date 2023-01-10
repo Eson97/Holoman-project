@@ -138,7 +138,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.0109277, y: 1.1600001}
   m_EdgeRadius: 0
 --- !u!96 &2033272944769487471
 TrailRenderer:
