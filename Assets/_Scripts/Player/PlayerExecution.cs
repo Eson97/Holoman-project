@@ -15,7 +15,6 @@ public class PlayerExecution : MonoBehaviour
     private Vector2 _executionDir = Vector2.zero;
     private bool _canExec = true;
     private float _originalGravity;
-    private int _execCount = 0;
 
     private InputAction _execDirAction;
     private InputAction _aimModeAction;
@@ -86,43 +85,22 @@ public class PlayerExecution : MonoBehaviour
     private void StartExecution()
     {
         if (PlayerStateManager.Instance.CurrentState != PlayerState.Aiming) return;
-        
+
         PlayerStateManager.Instance.ChangeState(PlayerState.Executing);
-        _execCount++;
         StartCoroutine(Exec());
     }
-
-    //private IEnumerator Exec()
-    //{
-    //    _rigidbody2D.velocity = _executionDir * 35;
-
-    //    yield return new WaitForSeconds(.15f);
-
-    //    _rigidbody2D.gravityScale = _originalGravity;
-    //    _rigidbody2D.velocity = Vector2.zero;
-
-    //    PlayerStateManager.Instance.ChangeState(PlayerState.Default);
-    //}
 
     private IEnumerator Exec()
     {
         _rigidbody2D.velocity = _executionDir * 35;
+        _rigidbody2D.gravityScale = 0f;
 
         yield return new WaitForSeconds(.15f);
-        
+
+        _rigidbody2D.gravityScale = _originalGravity;
         _rigidbody2D.velocity = Vector2.zero;
 
-        if (_execCount >= 4)
-        {
-            _execCount = 0;
-            _rigidbody2D.gravityScale = _originalGravity;
-            PlayerStateManager.Instance.ChangeState(PlayerState.Default);
-        }
-        else
-            PlayerStateManager.Instance.ChangeState(PlayerState.Aiming);
-                
-        StartExecution();
-
+        PlayerStateManager.Instance.ChangeState(PlayerState.Default);
     }
 
 }
