@@ -117,7 +117,7 @@ public class PlayerMovement : MonoBehaviour
         else
             _rigidbody2D.velocity = new Vector2(dirX, _rigidbody2D.velocity.y);
 
-        if (isHittingStickyWall(_direction.normalized))
+        if (isHittingStickyWall())
             _rigidbody2D.velocity = Vector2.zero;
     }
 
@@ -125,17 +125,8 @@ public class PlayerMovement : MonoBehaviour
     {
         return Physics2D.BoxCast(_collider.bounds.center, new Vector3(_collider.bounds.size.x, _collider.bounds.size.y - 0.01f), 0f, direction, .1f, jumpableGround); 
     }
-    private bool isHittingStickyWall(Vector2 direction)
-    {
-        //var result = Physics2D.BoxCast(_collider.bounds.center, _collider.bounds.size, 0f, direction, .1f, jumpableWall);
-
-        //if (result && PlayerStateManager.Instance.CurrentState != PlayerState.OnStickyWall)
-        //    PlayerStateManager.Instance.ChangeState(PlayerState.OnStickyWall);
-
-        var result = PlayerStateManager.Instance.CurrentState == PlayerState.OnStickyWall;
-
-        return result;
-    }
+    private bool isHittingStickyWall() => PlayerStateManager.Instance.CurrentState == PlayerState.OnStickyWall;
+    
 
     private void GetDirection(InputAction.CallbackContext ctx) => _direction = ctx.ReadValue<Vector2>();
     private void resetDirection(InputAction.CallbackContext ctx) => _direction = Vector2.zero;
