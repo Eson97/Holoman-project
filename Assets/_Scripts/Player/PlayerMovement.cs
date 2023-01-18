@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -95,7 +94,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        var dirX = _rigidbody2D.velocity.x;
+        var dirX = _rigidbody2D.velocity.normalized.x;
 
         if (dirX > 0.01f)
             _spriteRenderer.flipX = false;
@@ -103,7 +102,7 @@ public class PlayerMovement : MonoBehaviour
             _spriteRenderer.flipX = true;
 
         if (PlayerStateManager.Instance.CurrentState == PlayerState.Default)
-            _animator.SetFloat("Speed", System.Math.Abs(dirX));
+            _animator.SetFloat("Speed", Mathf.Abs(dirX));
         else
             _animator.SetFloat("Speed", 0.001f);
     }
