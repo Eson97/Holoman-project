@@ -11,9 +11,9 @@ public class PlayerAttack : MonoBehaviour
     private InputAction _attackUpAction;
     private InputAction _attackDownAction;
 
-    public Action AttackDelegate;
-    public Action AttackUpDelegate;
-    public Action AttackDownDelegate;
+    public static Action AttackDelegate;
+    public static Action AttackUpDelegate;
+    public static Action AttackDownDelegate;
 
     private void Awake()
     {
