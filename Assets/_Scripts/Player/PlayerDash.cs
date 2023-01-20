@@ -43,7 +43,7 @@ public class PlayerDash : MonoBehaviour
 
     private void StartDash(InputAction.CallbackContext obj)
     {
-        if (PlayerStateManager.Instance.CurrentState == PlayerState.Aiming) return;
+        if (PlayerStateManager.Instance.CurrentState != PlayerState.Default) return;
         if (_canDash)
             StartCoroutine(Dash());
     }
@@ -54,8 +54,8 @@ public class PlayerDash : MonoBehaviour
         var originalGravity = _rigidbody2D.gravityScale;
         _rigidbody2D.gravityScale = 0f;
         var dashDir = _spriteRenderer.flipX
-            ? Vector2.right.x
-            : Vector2.left.x;
+            ? Vector2.left.x
+            : Vector2.right.x;
         _rigidbody2D.velocity = new Vector2(dashDir * _dashingForce, 0f);
 
         _trailRenderer.emitting = true;
@@ -63,7 +63,9 @@ public class PlayerDash : MonoBehaviour
         _trailRenderer.emitting = false;
 
         _rigidbody2D.gravityScale = originalGravity;
-        PlayerStateManager.Instance.ChangeState(PlayerState.Default);
+
+        if(PlayerStateManager.Instance.CurrentState == PlayerState.Dashing)
+            PlayerStateManager.Instance.ChangeState(PlayerState.Default);
 
         yield return new WaitForSeconds(_dashingCooldown);
         _canDash = true;
