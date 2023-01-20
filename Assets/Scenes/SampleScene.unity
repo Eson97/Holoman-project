@@ -181,7 +181,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rigidbody2D: {fileID: 832327969}
-  _collider: {fileID: 832327968}
+  _collider: {fileID: 1941936870}
   jumpableGround:
     serializedVersion: 2
     m_Bits: 64
@@ -989,11 +989,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2033272944769487464, guid: 4cf1baf71caab4d4eb6e02682db68c09, type: 3}
   m_PrefabInstance: {fileID: 2033272943990637424}
   m_PrefabAsset: {fileID: 0}
---- !u!61 &832327968 stripped
-BoxCollider2D:
-  m_CorrespondingSourceObject: {fileID: 2033272944769487467, guid: 4cf1baf71caab4d4eb6e02682db68c09, type: 3}
-  m_PrefabInstance: {fileID: 2033272943990637424}
-  m_PrefabAsset: {fileID: 0}
 --- !u!50 &832327969 stripped
 Rigidbody2D:
   m_CorrespondingSourceObject: {fileID: 2033272944769487466, guid: 4cf1baf71caab4d4eb6e02682db68c09, type: 3}
@@ -1336,6 +1331,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &1941936870 stripped
+BoxCollider2D:
+  m_CorrespondingSourceObject: {fileID: 1395489524947891370, guid: 4cf1baf71caab4d4eb6e02682db68c09, type: 3}
+  m_PrefabInstance: {fileID: 2033272943990637424}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2128387465
 GameObject:
   m_ObjectHideFlags: 0
