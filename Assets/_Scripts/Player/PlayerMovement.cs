@@ -20,50 +20,31 @@ public class PlayerMovement : MonoBehaviour
     [Tooltip("Pared sobre la cual se puede saltar")]
     [SerializeField, Rename("Sticky wall layout")] private LayerMask jumpableWall;
 
-    [Header("Dash Settings")]
-    [Tooltip("Fuerza de impulso del dash")]
-    [SerializeField, Rename("Force")] private float _dashingForce = 24f;
-    [Tooltip("Duracion del dash en segundos (tambien inhabilita los demas controles)")]
-    [SerializeField, Rename("Duration (s)")] private float _dashingTime = 0.2f;
-    [Tooltip("Tiempo de enfriamiento para volver a usar el dash en segundos")]
-    [SerializeField,Rename("Cooldown (s)")]private float _dashingCooldown = 1f;
 
 
     //-----Movement-----
     private Vector2 _direction = Vector2.zero;
     private float _sprintMult = 1f;
 
-
-    //-----Dash-----
-    private bool _canDash = true;
-
     //-----Components-----
     private Rigidbody2D _rigidbody2D;
-    private TrailRenderer _trailRenderer;
-    private SpriteRenderer _spriteRenderer;
     private BoxCollider2D _collider;
     private PlayerInput _input;
-    private Animator _animator;
 
     //-----Inputs-----
     private InputAction _moveAction;
     private InputAction _runAction;
     private InputAction _jumpAction;
-    private InputAction _dashAction;
 
     private void Awake()
     {
-        _spriteRenderer = GetComponent<SpriteRenderer>();
         _input = gameObject.GetComponent<PlayerInput>();
-        _trailRenderer = GetComponent<TrailRenderer>();
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _collider = GetComponent<BoxCollider2D>();
-        _animator = GetComponent<Animator>();
 
         _moveAction = _input.actions["Move"];
         _runAction = _input.actions["Run"];
         _jumpAction = _input.actions["Jump"];
-        _dashAction = _input.actions["Dash"];
     }
     private void OnEnable()
     {
@@ -76,7 +57,6 @@ public class PlayerMovement : MonoBehaviour
         _jumpAction.performed += StartJump;
         _jumpAction.canceled += StopJump;
 
-        _dashAction.performed += StartDash;
     }
     private void OnDisable()
     {
@@ -89,23 +69,8 @@ public class PlayerMovement : MonoBehaviour
         _jumpAction.performed -= StartJump;
         _jumpAction.canceled -= StopJump;
 
-        _dashAction.performed -= StartDash;
     }
 
-    private void Update()
-    {
-        var dirX = _rigidbody2D.velocity.normalized.x;
-
-        if (dirX > 0.01f)
-            _spriteRenderer.flipX = false;
-        else if (dirX < -0.01f)
-            _spriteRenderer.flipX = true;
-
-        if (PlayerStateManager.Instance.CurrentState == PlayerState.Default)
-            _animator.SetFloat("Speed", Mathf.Abs(dirX));
-        else
-            _animator.SetFloat("Speed", 0.001f);
-    }
 
     private void FixedUpdate()
     {
@@ -126,24 +91,16 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private bool isHittingNormalWall(Vector2 direction) => 
-        Physics2D.BoxCast(_collider.bounds.center, new Vector2(_collider.bounds.size.x, _collider.bounds.size.y - 0.01f), 0f, direction, .1f, jumpableGround);
+        Physics2D.BoxCast(_collider.bounds.center, new Vector2(_collider.bounds.size.x, _collider.bounds.size.y - 0.001f), 0f, direction, .1f, jumpableGround);
     private bool isHittingStickyWall(Vector2 direction) => 
         PlayerStateManager.Instance.CurrentState == PlayerState.OnStickyWall &&
-        Physics2D.BoxCast(_collider.bounds.center, new Vector2(_collider.bounds.size.x, _collider.bounds.size.y - 0.01f), 0f, direction, .1f, jumpableWall);
+        Physics2D.BoxCast(_collider.bounds.center, new Vector2(_collider.bounds.size.x, _collider.bounds.size.y - 0.001f), 0f, direction, .1f, jumpableWall);
 
     private void GetDirection(InputAction.CallbackContext ctx) => _direction = ctx.ReadValue<Vector2>();
     private void resetDirection(InputAction.CallbackContext ctx) => _direction = Vector2.zero;
 
-    private void StartRunning(InputAction.CallbackContext ctx)
-    {
-        if (PlayerStateManager.Instance.CurrentState == PlayerState.Dashing) return;
-        _sprintMult = _sprintMultiplier;
-    }
-    private void StopRunning(InputAction.CallbackContext ctx)
-    {
-        if (PlayerStateManager.Instance.CurrentState == PlayerState.Dashing) return;
-        _sprintMult = 1f;
-    }
+    private void StartRunning(InputAction.CallbackContext ctx) => _sprintMult = _sprintMultiplier;
+    private void StopRunning(InputAction.CallbackContext ctx) => _sprintMult = 1f;
 
     private void StartJump(InputAction.CallbackContext ctx)
     {
@@ -170,38 +127,6 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(.15f);
         PlayerStateManager.Instance.ChangeState(PlayerState.Default);
     }
-    private bool isGrounded()
-    {
-        //verifica si estamos parados sobre el suelo o no
-        return Physics2D.BoxCast(_collider.bounds.center, _collider.bounds.size, 0f, Vector2.down, .1f, jumpableGround);
-    }
+    private bool isGrounded() => PlayerSubStateManager.Instance.IsGrounded;
 
-
-    private void StartDash(InputAction.CallbackContext obj)
-    {
-        if (PlayerStateManager.Instance.CurrentState == PlayerState.Aiming) return;
-        if (_canDash)
-            StartCoroutine(Dash());
-    }
-    private IEnumerator Dash()
-    {
-        _canDash = false;
-        PlayerStateManager.Instance.ChangeState(PlayerState.Dashing);
-        var originalGravity = _rigidbody2D.gravityScale;
-        _rigidbody2D.gravityScale = 0f;
-        var dashDir = _spriteRenderer.flipX
-            ? Vector2.right.x
-            : Vector2.left.x;
-        _rigidbody2D.velocity = new Vector2(dashDir * _dashingForce, 0f);
-
-        _trailRenderer.emitting = true;
-        yield return new WaitForSeconds(_dashingTime);
-        _trailRenderer.emitting = false;
-
-        _rigidbody2D.gravityScale = originalGravity;
-        PlayerStateManager.Instance.ChangeState(PlayerState.Default);
-
-        yield return new WaitForSeconds(_dashingCooldown);
-        _canDash = true;
-    }
 }
