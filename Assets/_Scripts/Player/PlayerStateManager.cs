@@ -7,8 +7,8 @@ public class PlayerStateManager : Singleton<PlayerStateManager>
 {
     public PlayerState CurrentState { get; private set; }
 
-    public Action OnBeforeStateChanged;
-    public Action OnAfterStateChanged;
+    public Action<PlayerState> OnBeforeStateChanged;
+    public Action<PlayerState> OnAfterStateChanged;
 
     public Action OnDefault;
     public Action OnDashing;
@@ -22,7 +22,7 @@ public class PlayerStateManager : Singleton<PlayerStateManager>
 
     public void ChangeState(PlayerState newPlayerState)
     {
-        OnBeforeStateChanged?.Invoke();
+        OnBeforeStateChanged?.Invoke(CurrentState);
         
         CurrentState = newPlayerState;
         
@@ -50,7 +50,7 @@ public class PlayerStateManager : Singleton<PlayerStateManager>
                 throw new ArgumentOutOfRangeException(nameof(newPlayerState), newPlayerState, null);
         }
         
-        OnAfterStateChanged?.Invoke();
+        OnAfterStateChanged?.Invoke(CurrentState);
     }
 
 
