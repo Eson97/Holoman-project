@@ -11,9 +11,9 @@ TagManager:
   - 
   - Water
   - UI
-  - Jumpable Ground
-  - Jumpable Wall
-  - 
+  - Ground
+  - Sticky Wall
+  - Sticky Ground
   - 
   - 
   - 

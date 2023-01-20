@@ -17,8 +17,10 @@ GameObject:
   - component: {fileID: 2033272944769487468}
   - component: {fileID: 2033272944769487470}
   - component: {fileID: 2033272944769487469}
+  - component: {fileID: 7586511556167983166}
   - component: {fileID: 8447904648922601221}
   - component: {fileID: 3232756112466917621}
+  - component: {fileID: 884091423462570294}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -396,9 +398,21 @@ MonoBehaviour:
   jumpableWall:
     serializedVersion: 2
     m_Bits: 128
-  _dashingForce: 35
-  _dashingTime: 0.15
-  _dashingCooldown: 0.5
+--- !u!114 &7586511556167983166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2033272944769487461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1aaabcf24a140a8439013b398368d7bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _dashingForce: 24
+  _dashingTime: 0.2
+  _dashingCooldown: 1
 --- !u!114 &8447904648922601221
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -432,3 +446,15 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &884091423462570294
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2033272944769487461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ce962054194e754283d965b033e8710, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
