@@ -83,12 +83,13 @@ public class PlayerExecution : MonoBehaviour
     {
         if (PlayerStateManager.Instance.CurrentState != PlayerState.Aiming) return;
 
-        PlayerStateManager.Instance.ChangeState(PlayerState.Executing);
         StartCoroutine(Exec());
     }
 
     private IEnumerator Exec()
     {
+        PlayerStateManager.Instance.ChangeState(PlayerState.Executing);
+
         var originalGravity = _rigidbody2D.gravityScale;
 
         _rigidbody2D.velocity = _executionDir * 35;
@@ -99,7 +100,8 @@ public class PlayerExecution : MonoBehaviour
         _rigidbody2D.gravityScale = originalGravity;
         _rigidbody2D.velocity = Vector2.zero;
 
-        PlayerStateManager.Instance.ChangeState(PlayerState.Default);
+        if(PlayerStateManager.Instance.CurrentState == PlayerState.Executing)
+            PlayerStateManager.Instance.ChangeState(PlayerState.Default);
     }
 
     private void StartSlowMotion()
@@ -108,9 +110,9 @@ public class PlayerExecution : MonoBehaviour
         Time.fixedDeltaTime = Time.timeScale * 0.02f;
     }
 
-    private void EndSlowMotion()
+    private void EndSlowMotion(PlayerState currentState)
     {
-        if(PlayerStateManager.Instance.CurrentState == PlayerState.Aiming)
+        if(currentState == PlayerState.Aiming)
         {
             Time.timeScale = 1f;
             Time.fixedDeltaTime = Time.timeScale * 0.02f;
