@@ -56,37 +56,37 @@ public class PlayerStateManager : Singleton<PlayerStateManager>
 
     private void HandleDefault()
     {
-        Debug.Log("State is now Default");
+        Debug.Log("<color=teal>State</color> is now Default");
         OnDefault?.Invoke();
     }
 
     private void HandleDashing()
     {
-        Debug.Log("State is now Dashing");
+        Debug.Log("<color=teal>State</color> is now Dashing");
         OnDashing?.Invoke();
     }
 
 
     private void HandleWallJumping()
     {
-        Debug.Log("State is now Wall Jumping");
+        Debug.Log("<color=teal>State</color> is now Wall Jumping");
         OnWallJumping?.Invoke();
     }
 
     private void HandleOnStickyWall()
     {
-        Debug.Log("State is now On Sticky Wall");
+        Debug.Log("<color=teal>State</color> is now On Sticky Wall");
         OnOnStickyWall?.Invoke();
     }
 
     private void HandleAiming()
     {
-        Debug.Log("State is now Aiming");
+        Debug.Log("<color=teal>State</color> is now Aiming");
         OnAiming?.Invoke();
     }
     private void HandleExecuting()
     {
-        Debug.Log("State is now Executing");
+        Debug.Log("<color=teal>State</color> is now Executing");
         OnExecuting?.Invoke();
     }
 }
