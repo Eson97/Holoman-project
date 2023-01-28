@@ -27,26 +27,50 @@ public class PlayerAnimationController : MonoBehaviour
 
         if (PlayerStateManager.Instance.CurrentState == PlayerState.Default)
             HandleDefaultState(PlayerSubStateManager.Instance.CurrentSubState);
+        if (PlayerStateManager.Instance.CurrentState == PlayerState.OnStickyWall)
+            HandleOnStickyWall();
+        if (PlayerStateManager.Instance.CurrentState == PlayerState.WallJumping)
+            HandleWallJump();
+
+    }
+
+    private void HandleWallJump()
+    {
+        _animator.SetBool("OnStickyWall", false); 
+        _animator.SetFloat("SpeedY", 1f);
+
+    }
+
+    private void HandleOnStickyWall()
+    {
+        _animator.SetBool("OnStickyWall", true);
     }
 
     private void HandleDefaultState(PlayerSubState playerSubState)
     {
         switch (playerSubState)
         {
-
             case PlayerSubState.Idle:
                 _animator.SetFloat("Speed", 0f);
+                _animator.SetFloat("SpeedY", 0f);
                 break;
             case PlayerSubState.Running:
                 _animator.SetFloat("Speed", 1f);
+                _animator.SetFloat("SpeedY", 0f);
                 break;
             case PlayerSubState.Jumping:
+                _animator.SetFloat("Speed", 0f);
+                _animator.SetFloat("SpeedY", 1f);
                 break;
             case PlayerSubState.Falling:
+                _animator.SetFloat("Speed", 0f);
+                _animator.SetFloat("SpeedY", -1f);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(playerSubState), playerSubState, null);
         }
+     
+        _animator.SetBool("OnStickyWall", false);
     }
 
 
