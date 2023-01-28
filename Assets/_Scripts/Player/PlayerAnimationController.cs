@@ -17,21 +17,33 @@ public class PlayerAnimationController : MonoBehaviour
 
     private void Update()
     {
-        var dirX = _rigidbody2D.velocity.normalized.x;
+        //var dirX = _rigidbody2D.velocity.normalized.x;
+        var dirX = PlayerMovement.Direction.normalized.x;
 
         if (dirX > 0.01f)
             _spriteRenderer.flipX = false;
         else if (dirX < -0.01f)
             _spriteRenderer.flipX = true;
 
+        UpdateAnimation(PlayerStateManager.Instance.CurrentState);
+    }
 
-        if (PlayerStateManager.Instance.CurrentState == PlayerState.Default)
-            HandleDefaultState(PlayerSubStateManager.Instance.CurrentSubState);
-        if (PlayerStateManager.Instance.CurrentState == PlayerState.OnStickyWall)
-            HandleOnStickyWall();
-        if (PlayerStateManager.Instance.CurrentState == PlayerState.WallJumping)
-            HandleWallJump();
-
+    private void UpdateAnimation(PlayerState state) 
+    {
+        switch (state)
+        {
+            case PlayerState.Default:
+                HandleDefaultState(PlayerSubStateManager.Instance.CurrentSubState);
+                break;
+            case PlayerState.OnStickyWall: 
+                HandleOnStickyWall();
+                break;
+            case PlayerState.WallJumping:
+                HandleWallJump();
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(state), state, null);
+        };
     }
 
     private void HandleWallJump()
