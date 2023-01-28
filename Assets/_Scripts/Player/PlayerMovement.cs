@@ -23,7 +23,7 @@ public class PlayerMovement : MonoBehaviour
 
 
     //-----Movement-----
-    private Vector2 _direction = Vector2.zero;
+    public static Vector2 Direction = Vector2.zero;
     private float _sprintMult = 1f;
 
     //-----Components-----
@@ -79,14 +79,14 @@ public class PlayerMovement : MonoBehaviour
         if (PlayerStateManager.Instance.CurrentState == PlayerState.Aiming) return;
         if (PlayerStateManager.Instance.CurrentState == PlayerState.Executing) return;
 
-        var dirX = _direction.x * _movementSpeed * _sprintMult * Time.fixedDeltaTime;
+        var dirX = Direction.x * _movementSpeed * _sprintMult * Time.fixedDeltaTime;
 
-        if (isHittingNormalWall(_direction.normalized))
+        if (isHittingNormalWall(Direction.normalized))
             _rigidbody2D.velocity = new Vector2(0f, _rigidbody2D.velocity.y);
         else
             _rigidbody2D.velocity = new Vector2(dirX, _rigidbody2D.velocity.y);
 
-        if (isHittingStickyWall(_direction.normalized))
+        if (isHittingStickyWall(Direction.normalized))
             _rigidbody2D.velocity = Vector2.zero;
     }
 
@@ -96,8 +96,8 @@ public class PlayerMovement : MonoBehaviour
         PlayerStateManager.Instance.CurrentState == PlayerState.OnStickyWall &&
         Physics2D.BoxCast(_collider.bounds.center, new Vector2(_collider.bounds.size.x, _collider.bounds.size.y - 0.001f), 0f, direction, .1f, jumpableWall);
 
-    private void GetDirection(InputAction.CallbackContext ctx) => _direction = ctx.ReadValue<Vector2>();
-    private void resetDirection(InputAction.CallbackContext ctx) => _direction = Vector2.zero;
+    private void GetDirection(InputAction.CallbackContext ctx) => Direction = ctx.ReadValue<Vector2>();
+    private void resetDirection(InputAction.CallbackContext ctx) => Direction = Vector2.zero;
 
     private void StartRunning(InputAction.CallbackContext ctx) => _sprintMult = _sprintMultiplier;
     private void StopRunning(InputAction.CallbackContext ctx) => _sprintMult = 1f;
@@ -123,7 +123,7 @@ public class PlayerMovement : MonoBehaviour
     private IEnumerator WallJump()
     {
         PlayerStateManager.Instance.ChangeState(PlayerState.WallJumping);
-        _rigidbody2D.velocity = new Vector2(_direction.normalized.x * -(_wallJumpForce), _jumpForce);
+        _rigidbody2D.velocity = new Vector2(Direction.normalized.x * -(_wallJumpForce), _jumpForce);
         yield return new WaitForSeconds(.15f);
         PlayerStateManager.Instance.ChangeState(PlayerState.Default);
     }
