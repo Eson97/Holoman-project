@@ -29,15 +29,15 @@ public class PlayerIdleState : PlayerBaseState
 
     public override void CheckSwitchStates()
     {
-        if(PlayerInputManager.Instance.IsMoving && PlayerInputManager.Instance.IsRunPressed)
+        if (PlayerInputManager.Instance.IsMoving && PlayerInputManager.Instance.IsRunPressed)
         {
             SwitchState(Factory.Run());
         }
-        else if(PlayerInputManager.Instance.IsMoving)
+        else if (PlayerInputManager.Instance.IsMoving)
         {
             SwitchState(Factory.Walk());
         }
-        else if (PlayerInputManager.Instance.IsCrouchPressed)
+        else if (PlayerInputManager.Instance.IsCrouchPressed && Ctx.CanCrouch)
         {
             SwitchState(Factory.Crouch());
         }

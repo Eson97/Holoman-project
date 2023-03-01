@@ -26,7 +26,7 @@ public class PlayerSlideState : PlayerBaseState
 
     public override void FixedUpdateState()
     {
-        var dir = Ctx.PlayerVisualSprite.flipX
+        var dir = Ctx.IsFlipped
             ? Vector2.left
             : Vector2.right;
 

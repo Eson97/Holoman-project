@@ -16,8 +16,8 @@ public abstract class PlayerBaseState
     protected PlayerStateMachine Ctx => _ctx;
     protected PlayerStateFactory Factory => _factory;
 
-    //borrar, solo para debug
     public PlayerBaseState SubState => _currentSubState;
+    public PlayerBaseState SuperState => _currentSuperState;
 
     public PlayerBaseState(PlayerStateMachine currentContext,PlayerStateFactory playerStateFactory)
     {

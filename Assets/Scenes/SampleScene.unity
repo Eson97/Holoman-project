@@ -1303,15 +1303,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _movementSpeed: 550
   _runSpeedMultiplier: 1.2
+  _groundLayer:
+    serializedVersion: 2
+    m_Bits: 320
   _jumpForce: 22
+  _jumpableGroundlayer:
+    serializedVersion: 2
+    m_Bits: 64
   _dashingForce: 24
   _dashingTime: 0.2
   _dashingCooldown: 1
   _slideDuration: 1
   _timeToSlide: 3
-  _jumpableGround:
-    serializedVersion: 2
-    m_Bits: 64
   _playerVisual: {fileID: 375270361}
 --- !u!1 &1760558158
 GameObject:

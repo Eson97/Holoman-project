@@ -34,7 +34,7 @@ public class PlayerGroundedState : PlayerBaseState, IRootState
         {
             SwitchState(Factory.Dashing());
         }
-        else if (PlayerInputManager.Instance.IsJumpPressed)
+        else if (PlayerInputManager.Instance.IsJumpPressed && Ctx.CanJump)
         {
             SwitchState(Factory.Jump());
         }

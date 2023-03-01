@@ -53,9 +53,9 @@ public class PlayerDashState : PlayerBaseState, IRootState
         var originalGravity = Ctx.Rigidbody.gravityScale;
         Ctx.Rigidbody.gravityScale = 0f;
 
-        var dashDir = Ctx.PlayerVisualSprite.flipX
-            ?Vector2.left
-            :Vector2.right;
+        var dashDir = Ctx.IsFlipped
+            ? Vector2.left
+            : Vector2.right;
 
         Ctx.Rigidbody.velocity = new Vector2(dashDir.x * Ctx.DashingForce, 0f);
 

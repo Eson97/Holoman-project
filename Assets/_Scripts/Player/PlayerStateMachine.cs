@@ -4,15 +4,36 @@ using UnityEngine;
 
 public class PlayerStateMachine : MonoBehaviour
 {
-    [SerializeField] private float _movementSpeed = 550f;
-    [SerializeField] private float _runSpeedMultiplier = 1.2f;
-    [SerializeField] private float _jumpForce = 22f;
-    [SerializeField] private float _dashingForce = 24f;
-    [SerializeField] private float _dashingTime = 0.2f;
-    [SerializeField] private float _dashingCooldown = 1f;
-    [SerializeField] private float _slideDuration = 1f;
+    [Header("Movement Settings")]
+    [Tooltip("Velocidad de movimiento normal")]
+    [SerializeField,Rename("Speed")] private float _movementSpeed = 550f;
+    [Tooltip("Multiplicador de velocidad al correr")]
+    [SerializeField,Rename("Sprint multiplier")] private float _runSpeedMultiplier = 1.2f;
+    [Tooltip("Layers de suelo")]
+    [SerializeField] private LayerMask _groundLayer;
+
+    [Header("Jump Settings")]
+    [Tooltip("Fuerza de salto")]
+    [SerializeField,Rename("Force")] private float _jumpForce = 22f;
+    [Tooltip("Layers sobre los cuales se puede saltar")]
+    [SerializeField] private LayerMask _jumpableGroundlayer;
+    
+    [Header("Dash Settings")]
+    [Tooltip("Fuerza del dash (afecta la distancia)")]
+    [SerializeField,Rename("Force")] private float _dashingForce = 24f;
+    [Tooltip("Duracion del dash")]
+    [SerializeField,Rename("Duration")] private float _dashingTime = 0.2f;
+    [Tooltip("Tiempo de enfriamiento")]
+    [SerializeField,Rename("Cooldown")] private float _dashingCooldown = 1f;
+    
+    [Header("Slide/Crouch Settings")]
+    [Tooltip("Afecta el tiempo en que no puedes moverte mientras esta el slide")]
+    [SerializeField,Rename("Duration")] private float _slideDuration = 1f;
+    [Tooltip("Tiempo corriendo requerido para poder realizar el slide")]
     [SerializeField] private float _timeToSlide = 3f;
-    [SerializeField] private LayerMask _jumpableGround;
+    
+    [Header("Player General Settings")]
+    [Tooltip("Visual en uso del personaje")]
     [SerializeField] private GameObject _playerVisual;
 
     private const float BOX_CAST_ANGLE = 0f;
@@ -25,7 +46,7 @@ public class PlayerStateMachine : MonoBehaviour
     private bool _isGrounded;
     private bool _canMove;
     private bool _canSlide;
-    private bool _timeRunning;
+    private bool _canJump;
 
     PlayerBaseState _currentState;
     PlayerStateFactory _stateFactory;
@@ -35,16 +56,19 @@ public class PlayerStateMachine : MonoBehaviour
     public Collider2D Collider => _collider;
     public GameObject PlayerVisual => _playerVisual;
     public SpriteRenderer PlayerVisualSprite => _playerVisualSprite;
+    public bool IsFlipped => PlayerVisualSprite.flipX;
     
     //Movement
     public float MovementSpeed => _movementSpeed;
     public float RunSpeedMultiplier => _runSpeedMultiplier;
     public bool CanMove => _canMove;
+    public LayerMask GroundLayout => _groundLayer;
     
     //Jump
     public float JumpForce => _jumpForce;
     public bool IsGrounded => _isGrounded;
-    public LayerMask JumpableGround => _jumpableGround;
+    public bool CanJump => _canJump;
+    public LayerMask JumpableGround => _jumpableGroundlayer;
     
     //Dash
     public float DashingForce => _dashingForce;
@@ -52,10 +76,11 @@ public class PlayerStateMachine : MonoBehaviour
     public float DashingCooldown => _dashingCooldown;
     public bool CanDash { get; set; } = true;
 
-    //Slide
+    //Slide / crouch
     public float SlideDuration => _slideDuration;
     public float TimeToSlide => _timeToSlide;
     public bool CanSlide => _canSlide;
+    public bool CanCrouch => CurrentState == _stateFactory.Grounded();
     public float StartRunningTime { get; set; }
 
     //Others
@@ -79,8 +104,10 @@ public class PlayerStateMachine : MonoBehaviour
         var dir = PlayerInputManager.Instance.CurrentMovementInput.normalized * Vector2.right;
         var canMoveBoxSize = new Vector2(_collider.bounds.size.x, _collider.bounds.size.y - 0.001f);
 
-        _canMove = !Physics2D.BoxCast(_collider.bounds.center, canMoveBoxSize, BOX_CAST_ANGLE, dir, BOX_CAST_DISTANCE, _jumpableGround);
-        _isGrounded = Physics2D.BoxCast(_collider.bounds.center, _collider.bounds.size, BOX_CAST_ANGLE, Vector2.down, BOX_CAST_DISTANCE, _jumpableGround);
+        _canMove = !Physics2D.BoxCast(_collider.bounds.center, canMoveBoxSize, BOX_CAST_ANGLE, dir, BOX_CAST_DISTANCE, _jumpableGroundlayer);
+        _isGrounded = Physics2D.BoxCast(_collider.bounds.center, _collider.bounds.size, BOX_CAST_ANGLE, Vector2.down, BOX_CAST_DISTANCE, _groundLayer);
+        _canJump = Physics2D.BoxCast(_collider.bounds.center, _collider.bounds.size, BOX_CAST_ANGLE, Vector2.down, BOX_CAST_DISTANCE, _jumpableGroundlayer);
+
 
         handleVisualSpriteFlip(dir);
         handleTimeToSlide();
@@ -99,6 +126,9 @@ public class PlayerStateMachine : MonoBehaviour
         if(StartRunningTime > _timeToSlide)
             _canSlide = true;
         else
+            _canSlide = false;
+
+        if (_currentState != _stateFactory.Grounded())
             _canSlide = false;
     }
     void handleVisualSpriteFlip(Vector2 dir)
