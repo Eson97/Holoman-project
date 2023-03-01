@@ -12,15 +12,15 @@ public class PlayerStateFactory
         _context = currentContext;
         _states = new Dictionary<PlayerStates, PlayerBaseState>();
 
-        _states.Add(PlayerStates.Idle,  new PlayerIdleState(_context, this));
-        _states.Add(PlayerStates.Walk,  new PlayerWalkState(_context, this));
-        _states.Add(PlayerStates.Run,   new PlayerRunState(_context, this));
-        _states.Add(PlayerStates.Fall,  new PlayerFallState(_context, this));
-        _states.Add(PlayerStates.Jump,  new PlayerJumpState(_context, this));
-        _states.Add(PlayerStates.Grounded, new PlayerGroundedState(_context, this));
-        _states.Add(PlayerStates.Dashing, new PlayerDashState(_context, this));
-        _states.Add(PlayerStates.Crouch, new PlayerCrouchState(_context, this));
-        _states.Add(PlayerStates.Slide, new PlayerSlideState(_context, this));
+        _states.Add(PlayerStates.Idle,  new PlayerIdleState(_context, this, PlayerStates.Idle));
+        _states.Add(PlayerStates.Walk,  new PlayerWalkState(_context, this, PlayerStates.Walk));
+        _states.Add(PlayerStates.Run,   new PlayerRunState(_context, this, PlayerStates.Run));
+        _states.Add(PlayerStates.Fall,  new PlayerFallState(_context, this, PlayerStates.Fall));
+        _states.Add(PlayerStates.Jump,  new PlayerJumpState(_context, this, PlayerStates.Jump));
+        _states.Add(PlayerStates.Grounded,  new PlayerGroundedState(_context, this, PlayerStates.Grounded));
+        _states.Add(PlayerStates.Dashing,   new PlayerDashState(_context, this, PlayerStates.Dashing));
+        _states.Add(PlayerStates.Crouch,    new PlayerCrouchState(_context, this, PlayerStates.Crouch));
+        _states.Add(PlayerStates.Slide,     new PlayerSlideState(_context, this, PlayerStates.Slide));
     }
 
     public PlayerBaseState Idle() => _states[PlayerStates.Idle];
@@ -34,8 +34,9 @@ public class PlayerStateFactory
     public PlayerBaseState Slide() => _states[PlayerStates.Slide];
 
 }
-enum PlayerStates
+public enum PlayerStates
 {
+    None,
     Idle,
     Walk,
     Run,

@@ -5,6 +5,7 @@ using UnityEngine;
 public abstract class PlayerBaseState
 {
     private bool _isRootState = false;
+    private PlayerStates _type;
 
     private PlayerStateMachine _ctx;
     private PlayerStateFactory _factory;
@@ -18,11 +19,13 @@ public abstract class PlayerBaseState
 
     public PlayerBaseState SubState => _currentSubState;
     public PlayerBaseState SuperState => _currentSuperState;
+    public PlayerStates Type => _type;
 
-    public PlayerBaseState(PlayerStateMachine currentContext,PlayerStateFactory playerStateFactory)
+    public PlayerBaseState(PlayerStateMachine currentContext,PlayerStateFactory playerStateFactory, PlayerStates type)
     {
         _ctx = currentContext;
         _factory = playerStateFactory;
+        _type = type;
     }
 
     public abstract void EnterState();

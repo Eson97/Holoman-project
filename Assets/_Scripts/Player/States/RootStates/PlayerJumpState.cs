@@ -6,11 +6,13 @@ public class PlayerJumpState : PlayerBaseState, IRootState
 {
     private bool _jump;
     public bool _falling;
-    public PlayerJumpState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory) 
-        : base(currentContext, playerStateFactory)
+
+    public PlayerJumpState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory, PlayerStates type) 
+        : base(currentContext, playerStateFactory, type)
     {
         IsRootState = true;
     }
+
     public override void EnterState()
     {
         InitializeSubState();

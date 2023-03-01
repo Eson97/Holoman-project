@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class PlayerCrouchState : PlayerBaseState
 {
-
-    public PlayerCrouchState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory)
-        : base(currentContext, playerStateFactory)
+    public PlayerCrouchState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory, PlayerStates type) 
+        : base(currentContext, playerStateFactory, type)
     {
     }
 

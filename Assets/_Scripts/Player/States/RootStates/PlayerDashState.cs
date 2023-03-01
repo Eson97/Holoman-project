@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PlayerDashState : PlayerBaseState, IRootState
 {
-    public PlayerDashState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory) 
-        : base(currentContext, playerStateFactory)
+    public PlayerDashState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory, PlayerStates type) 
+        : base(currentContext, playerStateFactory, type)
     {
         IsRootState = true;
     }

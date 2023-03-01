@@ -80,7 +80,7 @@ public class PlayerStateMachine : MonoBehaviour
     public float SlideDuration => _slideDuration;
     public float TimeToSlide => _timeToSlide;
     public bool CanSlide => _canSlide;
-    public bool CanCrouch => CurrentState == _stateFactory.Grounded();
+    public bool CanCrouch => _currentState.Type == PlayerStates.Grounded && _currentState.SubState.Type == PlayerStates.Idle;
     public float StartRunningTime { get; set; }
 
     //Others
@@ -113,7 +113,7 @@ public class PlayerStateMachine : MonoBehaviour
         handleTimeToSlide();
 
 
-        Debug.Log($"<color=teal>RootState</color> {_currentState} | <color=Red>SubState</color> {_currentState.SubState?.ToString() ?? "None"}");
+        Debug.Log($"<color=teal>RootState</color> {_currentState.Type} | <color=Red>SubState</color> {_currentState.SubState?.Type ?? PlayerStates.None}");
         _currentState.UpdateStates();
     }
     private void FixedUpdate()
@@ -128,7 +128,7 @@ public class PlayerStateMachine : MonoBehaviour
         else
             _canSlide = false;
 
-        if (_currentState != _stateFactory.Grounded())
+        if (_currentState.Type != PlayerStates.Grounded)
             _canSlide = false;
     }
     void handleVisualSpriteFlip(Vector2 dir)

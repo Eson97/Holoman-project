@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PlayerSlideState : PlayerBaseState
 {
-    public PlayerSlideState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory)
-        : base(currentContext, playerStateFactory)
+    public PlayerSlideState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory, PlayerStates type) 
+        : base(currentContext, playerStateFactory, type)
     {
     }
 
@@ -45,7 +45,7 @@ public class PlayerSlideState : PlayerBaseState
         {
             SwitchState(Factory.Walk());
         }
-        else if (PlayerInputManager.Instance.IsCrouchPressed && !PlayerInputManager.Instance.IsMoving)
+        else if (PlayerInputManager.Instance.IsCrouchPressed && Ctx.CanCrouch)
         {
             SwitchState(Factory.Crouch());
         }
