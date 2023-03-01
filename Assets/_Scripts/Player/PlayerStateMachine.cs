@@ -48,8 +48,8 @@ public class PlayerStateMachine : MonoBehaviour
     private bool _canSlide;
     private bool _canJump;
 
-    PlayerBaseState _currentState;
-    PlayerStateFactory _stateFactory;
+    private PlayerBaseState _currentState;
+    private PlayerStateFactory _stateFactory;
 
     //Components
     public Rigidbody2D Rigidbody => _rigidbody;
@@ -85,6 +85,7 @@ public class PlayerStateMachine : MonoBehaviour
 
     //Others
     public PlayerBaseState CurrentState { get => _currentState; set => _currentState = value; }
+    public PlayerBaseState CurrenSubState => _currentState.SubState;
 
     private void Awake()
     {
