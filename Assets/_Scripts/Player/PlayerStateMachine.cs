@@ -10,6 +10,8 @@ public class PlayerStateMachine : MonoBehaviour
     [SerializeField] private float _dashingForce = 24f;
     [SerializeField] private float _dashingTime = 0.2f;
     [SerializeField] private float _dashingCooldown = 1f;
+    [SerializeField] private float _slideDuration = 1f;
+    [SerializeField] private float _timeToSlide = 3f;
     [SerializeField] private LayerMask _jumpableGround;
     [SerializeField] private GameObject _playerVisual;
 
@@ -22,6 +24,8 @@ public class PlayerStateMachine : MonoBehaviour
 
     private bool _isGrounded;
     private bool _canMove;
+    private bool _canSlide;
+    private bool _timeRunning;
 
     PlayerBaseState _currentState;
     PlayerStateFactory _stateFactory;
@@ -29,6 +33,7 @@ public class PlayerStateMachine : MonoBehaviour
     //Components
     public Rigidbody2D Rigidbody => _rigidbody;
     public Collider2D Collider => _collider;
+    public GameObject PlayerVisual => _playerVisual;
     public SpriteRenderer PlayerVisualSprite => _playerVisualSprite;
     
     //Movement
@@ -46,6 +51,12 @@ public class PlayerStateMachine : MonoBehaviour
     public float DashingTime => _dashingTime;
     public float DashingCooldown => _dashingCooldown;
     public bool CanDash { get; set; } = true;
+
+    //Slide
+    public float SlideDuration => _slideDuration;
+    public float TimeToSlide => _timeToSlide;
+    public bool CanSlide => _canSlide;
+    public float StartRunningTime { get; set; }
 
     //Others
     public PlayerBaseState CurrentState { get => _currentState; set => _currentState = value; }
@@ -71,10 +82,8 @@ public class PlayerStateMachine : MonoBehaviour
         _canMove = !Physics2D.BoxCast(_collider.bounds.center, canMoveBoxSize, BOX_CAST_ANGLE, dir, BOX_CAST_DISTANCE, _jumpableGround);
         _isGrounded = Physics2D.BoxCast(_collider.bounds.center, _collider.bounds.size, BOX_CAST_ANGLE, Vector2.down, BOX_CAST_DISTANCE, _jumpableGround);
 
-        if (dir.x < -0.01f)
-            _playerVisualSprite.flipX = true;
-        else if(dir.x > 0.01f)
-            _playerVisualSprite.flipX = false;
+        handleVisualSpriteFlip(dir);
+        handleTimeToSlide();
 
 
         Debug.Log($"<color=teal>RootState</color> {_currentState} | <color=Red>SubState</color> {_currentState.SubState?.ToString() ?? "None"}");
@@ -83,5 +92,20 @@ public class PlayerStateMachine : MonoBehaviour
     private void FixedUpdate()
     {
         _currentState.FixedUpdateStates();
+    }
+
+    void handleTimeToSlide()
+    {
+        if(StartRunningTime > _timeToSlide)
+            _canSlide = true;
+        else
+            _canSlide = false;
+    }
+    void handleVisualSpriteFlip(Vector2 dir)
+    {
+        if (dir.x < -0.01f)
+            _playerVisualSprite.flipX = true;
+        else if (dir.x > 0.01f)
+            _playerVisualSprite.flipX = false;
     }
 }

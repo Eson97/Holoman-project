@@ -11,10 +11,12 @@ public class PlayerInputManager : Singleton<PlayerInputManager>
     private bool _isJumpPressed;
     private bool _isRunPressed;
     private bool _isDashPressed;
+    private bool _isCrouchPressed;
 
     public bool IsJumpPressed => _isJumpPressed;
     public bool IsRunPressed => _isRunPressed;
     public bool IsDashPressed => _isDashPressed;
+    public bool IsCrouchPressed => _isCrouchPressed;
     public bool IsMoving => _currentMovementInput != Vector2.zero;
     public Vector2 CurrentMovementInput => _currentMovementInput;
 
@@ -39,7 +41,12 @@ public class PlayerInputManager : Singleton<PlayerInputManager>
 
         _playerInputActions.Player.Dash.started += onDash;
         _playerInputActions.Player.Dash.canceled += onDash;
+
+        _playerInputActions.Player.Crouch.started += onCrouch;
+        _playerInputActions.Player.Crouch.canceled += onCrouch;
     }
+
+    private void onCrouch(UnityEngine.InputSystem.InputAction.CallbackContext ctx) => _isCrouchPressed = ctx.ReadValueAsButton();
 
     private void onDash(UnityEngine.InputSystem.InputAction.CallbackContext ctx) => _isDashPressed = ctx.ReadValueAsButton();
 

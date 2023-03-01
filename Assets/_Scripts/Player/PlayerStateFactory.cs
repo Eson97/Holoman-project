@@ -19,6 +19,8 @@ public class PlayerStateFactory
         _states.Add(PlayerStates.Jump,  new PlayerJumpState(_context, this));
         _states.Add(PlayerStates.Grounded, new PlayerGroundedState(_context, this));
         _states.Add(PlayerStates.Dashing, new PlayerDashState(_context, this));
+        _states.Add(PlayerStates.Crouch, new PlayerCrouchState(_context, this));
+        _states.Add(PlayerStates.Slide, new PlayerSlideState(_context, this));
     }
 
     public PlayerBaseState Idle() => _states[PlayerStates.Idle];
@@ -28,6 +30,8 @@ public class PlayerStateFactory
     public PlayerBaseState Jump() => _states[PlayerStates.Jump];
     public PlayerBaseState Grounded() => _states[PlayerStates.Grounded];
     public PlayerBaseState Dashing() => _states[PlayerStates.Dashing];
+    public PlayerBaseState Crouch() => _states[PlayerStates.Crouch];
+    public PlayerBaseState Slide() => _states[PlayerStates.Slide];
 
 }
 enum PlayerStates
@@ -39,4 +43,6 @@ enum PlayerStates
     Jump,
     Grounded,
     Dashing,
+    Crouch,
+    Slide,
 }

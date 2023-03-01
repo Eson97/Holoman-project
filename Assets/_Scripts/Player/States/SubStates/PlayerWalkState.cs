@@ -43,5 +43,9 @@ public class PlayerWalkState : PlayerBaseState
         {
             SwitchState(Factory.Run());
         }
+        else if (!PlayerInputManager.Instance.IsMoving && PlayerInputManager.Instance.IsCrouchPressed)
+        {
+            SwitchState(Factory.Crouch());
+        }
     }
 }

@@ -11,6 +11,7 @@ public class PlayerRunState : PlayerBaseState
 
     public override void EnterState()
     {
+        Ctx.StartRunningTime = 0f;
     }
 
     public override void ExitState()
@@ -19,6 +20,7 @@ public class PlayerRunState : PlayerBaseState
 
     public override void UpdateState()
     {
+        Ctx.StartRunningTime += Time.deltaTime;
         var dir = PlayerInputManager.Instance.CurrentMovementInput.normalized;
         CheckSwitchStates();
     }
@@ -39,6 +41,10 @@ public class PlayerRunState : PlayerBaseState
         if (!PlayerInputManager.Instance.IsMoving)
         {
             SwitchState(Factory.Idle());
+        }
+        else if (PlayerInputManager.Instance.IsCrouchPressed && PlayerInputManager.Instance.IsMoving && Ctx.CanSlide)
+        {
+            SwitchState(Factory.Slide());
         }
         else if(PlayerInputManager.Instance.IsMoving && !PlayerInputManager.Instance.IsRunPressed)
         {
