@@ -11,19 +11,18 @@ public class PlayerJumpState : PlayerBaseState, IRootState
         : base(currentContext, playerStateFactory, type)
     {
         IsRootState = true;
+        PlayerInputManager.Instance.OnJumpCanceledDelegate += PlayerInputManager_OnJumpCanceledDelegate;
     }
 
     public override void EnterState()
     {
         InitializeSubState();
-        PlayerInputManager.Instance.OnJumpCanceledDelegate += PlayerInputManager_OnJumpCanceledDelegate;
         _jump = true;
         _falling = false;
     }
 
     public override void ExitState()
     {
-        PlayerInputManager.Instance.OnJumpCanceledDelegate -= PlayerInputManager_OnJumpCanceledDelegate;
     }
 
     public override void UpdateState()
