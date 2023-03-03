@@ -45,10 +45,16 @@ public abstract class PlayerBaseState
         _currentSubState?.FixedUpdateState();
     }
 
+    public void ExitStates()
+    {
+        ExitState();
+        _currentSubState?.ExitState();
+    }
+
     protected void SwitchState(PlayerBaseState newState)
     {
         //current state exits state
-        ExitState();
+        ExitStates();
 
         //new state enters state
         newState.EnterState();
