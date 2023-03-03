@@ -28,8 +28,8 @@ public class PlayerIdleState : PlayerBaseState
     {
         if (_enterIdle)
         {
-            //Ctx.Rigidbody.velocity = new Vector2(0f, Ctx.Rigidbody.velocity.y);
-            _enterIdle=false;
+            Ctx.Rigidbody.velocity = new Vector2(0f, Ctx.Rigidbody.velocity.y);
+            _enterIdle =false;
         }
     }
 
