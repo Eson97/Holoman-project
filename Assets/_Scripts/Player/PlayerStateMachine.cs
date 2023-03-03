@@ -40,6 +40,7 @@ public class PlayerStateMachine : MonoBehaviour
     private Rigidbody2D _rigidbody;
     private Collider2D _collider;
     private SpriteRenderer _playerVisualSprite;
+    private Animator _playerVisualAnimator;
 
     private bool _isGrounded;
     private bool _canMove;
@@ -54,6 +55,7 @@ public class PlayerStateMachine : MonoBehaviour
     public Collider2D Collider => _collider;
     public GameObject PlayerVisual => _playerVisual;
     public SpriteRenderer PlayerVisualSprite => _playerVisualSprite;
+    public Animator PlayerVisualAnimator => _playerVisualAnimator;
     public bool IsFlipped => PlayerVisualSprite.flipX;
     
     //Movement
@@ -91,14 +93,14 @@ public class PlayerStateMachine : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody2D>();
         _collider = GetComponent<Collider2D>();
-        _playerVisualSprite = _playerVisual.GetComponent<SpriteRenderer>();
 
+        SetVisuals(_playerVisual);
     }
     private void Start()
     {
         _stateFactory = new PlayerStateFactory(this);
         _currentState = _stateFactory.Grounded();
-        _currentState.EnterState();
+        _currentState.EnterStates();
     }
     private void Update()
     {
@@ -115,6 +117,12 @@ public class PlayerStateMachine : MonoBehaviour
     private void FixedUpdate()
     {
         _currentState.FixedUpdateStates();
+    }
+
+    private void SetVisuals(GameObject newVisual)
+    {
+        _playerVisualSprite = newVisual.GetComponent<SpriteRenderer>();
+        _playerVisualAnimator = newVisual.GetComponent<Animator>();
     }
 
     private void handleBoxCastColliders(Vector2 dir)

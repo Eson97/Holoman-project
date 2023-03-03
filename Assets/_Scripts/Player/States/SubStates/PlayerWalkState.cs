@@ -11,10 +11,12 @@ public class PlayerWalkState : PlayerBaseState
 
     public override void EnterState()
     {
+        Ctx.PlayerVisualAnimator.SetBool("isWalking",true);
     }
 
     public override void ExitState()
     {
+        Ctx.PlayerVisualAnimator.SetBool("isWalking", false);
     }
 
     public override void UpdateState()

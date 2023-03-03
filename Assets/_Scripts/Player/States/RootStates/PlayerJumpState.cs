@@ -16,6 +16,8 @@ public class PlayerJumpState : PlayerBaseState, IRootState
 
     public override void EnterState()
     {
+        Ctx.PlayerVisualAnimator.SetBool("isJumping", true);
+
         InitializeSubState();
         _jump = true;
         _falling = false;
@@ -23,6 +25,7 @@ public class PlayerJumpState : PlayerBaseState, IRootState
 
     public override void ExitState()
     {
+        Ctx.PlayerVisualAnimator.SetBool("isJumping", false);
     }
 
     public override void UpdateState()

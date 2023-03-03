@@ -50,6 +50,11 @@ public abstract class PlayerBaseState
         ExitState();
         _currentSubState?.ExitState();
     }
+    public void EnterStates()
+    {
+        EnterState();
+        _currentSubState?.EnterState();
+    }
 
     protected void SwitchState(PlayerBaseState newState)
     {
@@ -57,7 +62,7 @@ public abstract class PlayerBaseState
         ExitStates();
 
         //new state enters state
-        newState.EnterState();
+        newState.EnterStates();
 
         if (_isRootState)
         {

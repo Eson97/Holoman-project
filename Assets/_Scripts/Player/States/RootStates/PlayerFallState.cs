@@ -12,11 +12,13 @@ public class PlayerFallState : PlayerBaseState, IRootState
 
     public override void EnterState()
     {
+        Ctx.PlayerVisualAnimator.SetBool("isFalling", true);
         InitializeSubState();
     }
 
     public override void ExitState()
     {
+        Ctx.PlayerVisualAnimator.SetBool("isFalling", false);
     }
     public override void UpdateState()
     {
