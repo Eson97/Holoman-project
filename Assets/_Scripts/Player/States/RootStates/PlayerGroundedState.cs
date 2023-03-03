@@ -46,17 +46,17 @@ public class PlayerGroundedState : PlayerBaseState, IRootState
     
     public void InitializeSubState()
     {
-        if(!PlayerInputManager.Instance.IsMoving && !PlayerInputManager.Instance.IsRunPressed)
+        if (PlayerInputManager.Instance.IsMoving && PlayerInputManager.Instance.IsRunPressed)
         {
-            SetSubState(Factory.Idle());
+            SetSubState(Factory.Run());
         }
-        else if(PlayerInputManager.Instance.IsMoving && !PlayerInputManager.Instance.IsRunPressed)
+        else if (PlayerInputManager.Instance.IsMoving && !PlayerInputManager.Instance.IsRunPressed)
         {
             SetSubState(Factory.Walk());
         }
         else
         {
-            SetSubState(Factory.Run());
+            SetSubState(Factory.Idle());
         }
     }
 

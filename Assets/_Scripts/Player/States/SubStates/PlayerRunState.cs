@@ -27,7 +27,7 @@ public class PlayerRunState : PlayerBaseState
 
     public override void FixedUpdateState()
     {
-        var dirX = PlayerInputManager.Instance.CurrentMovementInput.x;
+        var dirX = PlayerInputManager.Instance.CurrentMovementInput.normalized.x;
         var VelocityX = dirX * Ctx.MovementSpeed * Ctx.RunSpeedMultiplier * Time.fixedDeltaTime;
 
         if(Ctx.CanMove)

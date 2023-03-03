@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerIdleState : PlayerBaseState
 {
+    private bool _enterIdle;
     public PlayerIdleState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory, PlayerStates type) 
         : base(currentContext, playerStateFactory, type)
     {
@@ -11,6 +12,7 @@ public class PlayerIdleState : PlayerBaseState
 
     public override void EnterState()
     {
+        _enterIdle = true;
     }
 
     public override void ExitState()
@@ -24,7 +26,11 @@ public class PlayerIdleState : PlayerBaseState
 
     public override void FixedUpdateState()
     {
-        Ctx.Rigidbody.velocity = new Vector2(0f, Ctx.Rigidbody.velocity.y);
+        if (_enterIdle)
+        {
+            //Ctx.Rigidbody.velocity = new Vector2(0f, Ctx.Rigidbody.velocity.y);
+            _enterIdle=false;
+        }
     }
 
     public override void CheckSwitchStates()
@@ -33,7 +39,7 @@ public class PlayerIdleState : PlayerBaseState
         {
             SwitchState(Factory.Run());
         }
-        else if (PlayerInputManager.Instance.IsMoving)
+        else if (PlayerInputManager.Instance.IsMoving && !PlayerInputManager.Instance.IsRunPressed)
         {
             SwitchState(Factory.Walk());
         }

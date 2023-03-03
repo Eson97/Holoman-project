@@ -56,7 +56,7 @@ public abstract class PlayerBaseState
         if (_isRootState)
         {
             //switch current state of context
-            _ctx.CurrentState = newState;
+            _ctx.SetCurrentState(newState);
         }
         else
         {

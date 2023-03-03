@@ -36,8 +36,6 @@ public class PlayerStateMachine : MonoBehaviour
     [Tooltip("Visual en uso del personaje")]
     [SerializeField] private GameObject _playerVisual;
 
-    private const float BOX_CAST_ANGLE = 0f;
-    private const float BOX_CAST_DISTANCE = .1f;
 
     private Rigidbody2D _rigidbody;
     private Collider2D _collider;
@@ -83,9 +81,11 @@ public class PlayerStateMachine : MonoBehaviour
     public bool CanCrouch => _currentState.Type == PlayerStates.Grounded && _currentState.SubState.Type == PlayerStates.Idle;
     public float StartRunningTime { get; set; }
 
-    //Others
-    public PlayerBaseState CurrentState { get => _currentState; set => _currentState = value; }
+    //States
+    public PlayerBaseState CurrentState => _currentState;
     public PlayerBaseState CurrenSubState => _currentState.SubState;
+
+    public void SetCurrentState(PlayerBaseState newState) => _currentState = newState;
 
     private void Awake()
     {
@@ -103,13 +103,8 @@ public class PlayerStateMachine : MonoBehaviour
     private void Update()
     {
         var dir = PlayerInputManager.Instance.CurrentMovementInput.normalized * Vector2.right;
-        var canMoveBoxSize = new Vector2(_collider.bounds.size.x, _collider.bounds.size.y - 0.001f);
-
-        _canMove = !Physics2D.BoxCast(_collider.bounds.center, canMoveBoxSize, BOX_CAST_ANGLE, dir, BOX_CAST_DISTANCE, _jumpableGroundlayer);
-        _isGrounded = Physics2D.BoxCast(_collider.bounds.center, _collider.bounds.size, BOX_CAST_ANGLE, Vector2.down, BOX_CAST_DISTANCE, _groundLayer);
-        _canJump = Physics2D.BoxCast(_collider.bounds.center, _collider.bounds.size, BOX_CAST_ANGLE, Vector2.down, BOX_CAST_DISTANCE, _jumpableGroundlayer);
-
-
+        
+        handleBoxCastColliders(dir);
         handleVisualSpriteFlip(dir);
         handleTimeToSlide();
 
@@ -122,7 +117,17 @@ public class PlayerStateMachine : MonoBehaviour
         _currentState.FixedUpdateStates();
     }
 
-    void handleTimeToSlide()
+    private void handleBoxCastColliders(Vector2 dir)
+    {
+        var angle = 0f;
+        var distance = .1f;
+        var canMoveBoxSize = new Vector2(_collider.bounds.size.x, _collider.bounds.size.y - 0.001f);
+
+        _canMove = !Physics2D.BoxCast(_collider.bounds.center, canMoveBoxSize, angle, dir, distance, _jumpableGroundlayer);
+        _isGrounded = Physics2D.BoxCast(_collider.bounds.center, _collider.bounds.size, angle, Vector2.down, distance, _groundLayer);
+        _canJump = Physics2D.BoxCast(_collider.bounds.center, _collider.bounds.size, angle, Vector2.down, distance, _jumpableGroundlayer);
+    }
+    private void handleTimeToSlide()
     {
         if(StartRunningTime > _timeToSlide)
             _canSlide = true;
@@ -132,7 +137,7 @@ public class PlayerStateMachine : MonoBehaviour
         if (_currentState.Type != PlayerStates.Grounded)
             _canSlide = false;
     }
-    void handleVisualSpriteFlip(Vector2 dir)
+    private void handleVisualSpriteFlip(Vector2 dir)
     {
         if (dir.x < -0.01f)
             _playerVisualSprite.flipX = true;

@@ -29,20 +29,19 @@ public class PlayerInputManager : Singleton<PlayerInputManager>
 
         _playerInputActions.Player.Enable();
 
-        _playerInputActions.Player.Move.started += onMove;
         _playerInputActions.Player.Move.performed += onMove;
         _playerInputActions.Player.Move.canceled += onMove;
 
-        _playerInputActions.Player.Run.started += onRun;
+        _playerInputActions.Player.Run.performed += onRun;
         _playerInputActions.Player.Run.canceled += onRun;
 
-        _playerInputActions.Player.Jump.started += onJumpPressed;
+        _playerInputActions.Player.Jump.performed += onJumpPressed;
         _playerInputActions.Player.Jump.canceled += onJumpCanceled;
 
-        _playerInputActions.Player.Dash.started += onDash;
+        _playerInputActions.Player.Dash.performed += onDash;
         _playerInputActions.Player.Dash.canceled += onDash;
 
-        _playerInputActions.Player.Crouch.started += onCrouch;
+        _playerInputActions.Player.Crouch.performed += onCrouch;
         _playerInputActions.Player.Crouch.canceled += onCrouch;
     }
 

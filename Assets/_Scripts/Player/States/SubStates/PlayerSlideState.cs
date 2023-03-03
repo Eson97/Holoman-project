@@ -41,7 +41,7 @@ public class PlayerSlideState : PlayerBaseState
         {
             SwitchState(Factory.Run());
         }
-        else if (PlayerInputManager.Instance.IsMoving)
+        else if (PlayerInputManager.Instance.IsMoving && !PlayerInputManager.Instance.IsRunPressed)
         {
             SwitchState(Factory.Walk());
         }

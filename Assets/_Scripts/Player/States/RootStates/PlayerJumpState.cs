@@ -61,9 +61,9 @@ public class PlayerJumpState : PlayerBaseState, IRootState
 
     public void InitializeSubState()
     {
-        if (!PlayerInputManager.Instance.IsMoving && !PlayerInputManager.Instance.IsRunPressed)
+        if (PlayerInputManager.Instance.IsMoving && PlayerInputManager.Instance.IsRunPressed)
         {
-            SetSubState(Factory.Idle());
+            SetSubState(Factory.Run());
         }
         else if (PlayerInputManager.Instance.IsMoving && !PlayerInputManager.Instance.IsRunPressed)
         {
@@ -71,7 +71,7 @@ public class PlayerJumpState : PlayerBaseState, IRootState
         }
         else
         {
-            SetSubState(Factory.Run());
+            SetSubState(Factory.Idle());
         }
     }
 
