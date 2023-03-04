@@ -1633,6 +1633,7 @@ MonoBehaviour:
   _slideDuration: 1
   _timeToSlide: 3
   _playerVisual: {fileID: 1544326538}
+  _drawCollisions: 0
 --- !u!1 &1544326538 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2730072504389566349, guid: 04d93369cc6d1cc4fabd773d8d256b9b, type: 3}

@@ -42,6 +42,9 @@ public class PlayerStateMachine : MonoBehaviour
     [Tooltip("Visual en uso del personaje")]
     [SerializeField] private GameObject _playerVisual;
 
+    [Header("Debug Settings")]
+    [SerializeField] private bool _drawCollisions = false;
+
 
     private Rigidbody2D _rigidbody;
     private Collider2D _collider;
@@ -114,6 +117,8 @@ public class PlayerStateMachine : MonoBehaviour
     }
     private void Start()
     {
+        Physics2D.showColliderContacts = _drawCollisions;
+
         _stateFactory = new PlayerStateFactory(this);
         _currentState = _stateFactory.Grounded();
         _currentState.EnterStates();
@@ -145,11 +150,12 @@ public class PlayerStateMachine : MonoBehaviour
     private void handleBoxCastColliders(Vector2 direction)
     {
         var angle = 0f;
-        var distance = .01f;
+        var distanceAlt = 0.01f;
+        var distance = 0.1f;
         var origin = _collider.bounds.center;
         var size = _collider.bounds.size;
 
-        var collisionsOnPlayerDirection = Physics2D.BoxCastAll(origin, size, angle, direction, distance);
+        var collisionsOnPlayerDirection = Physics2D.BoxCastAll(origin, size, angle, direction, distanceAlt);
         _canMove = collisionsOnPlayerDirection.Length <= 1; //always hitting player collider
 
         _isHoldingFromStickyWall = _isHittingStickyWall && !_canMove; //more than 1 collision in that direction and is hitting a sticky wall
