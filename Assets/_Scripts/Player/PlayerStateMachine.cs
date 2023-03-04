@@ -6,32 +6,38 @@ public class PlayerStateMachine : MonoBehaviour
 {
     [Header("Movement Settings")]
     [Tooltip("Velocidad de movimiento normal")]
-    [SerializeField,Rename("Speed")] private float _movementSpeed = 550f;
+    [SerializeField, Rename("Speed")] private float _movementSpeed = 550f;
     [Tooltip("Multiplicador de velocidad al correr")]
-    [SerializeField,Rename("Sprint multiplier")] private float _runSpeedMultiplier = 1.2f;
+    [SerializeField, Rename("Sprint multiplier")] private float _runSpeedMultiplier = 1.2f;
     [Tooltip("Layers de suelo")]
     [SerializeField] private LayerMask _groundLayer;
 
     [Header("Jump Settings")]
     [Tooltip("Fuerza de salto")]
-    [SerializeField,Rename("Force")] private float _jumpForce = 22f;
+    [SerializeField, Rename("Force")] private float _jumpForce = 22f;
     [Tooltip("Layers sobre los cuales se puede saltar")]
     [SerializeField] private LayerMask _jumpableGroundLayer;
-    
+
+    [Header("Wall Jump Settings")]
+    [Tooltip("Tiempo que no se puede mover debido al salto")]
+    [SerializeField, Rename("Duration")] private float _wallJumpDuration = 0.15f;
+    [Tooltip("Fuerza con la que se impulsara en direccion contraria a la pared")]
+    [SerializeField, Rename("Force")] private float _wallJumpForce = 0.5f;
+
     [Header("Dash Settings")]
     [Tooltip("Fuerza del dash (afecta la distancia)")]
-    [SerializeField,Rename("Force")] private float _dashingForce = 24f;
+    [SerializeField, Rename("Force")] private float _dashingForce = 24f;
     [Tooltip("Duracion del dash")]
-    [SerializeField,Rename("Duration")] private float _dashingTime = 0.2f;
+    [SerializeField, Rename("Duration")] private float _dashingTime = 0.2f;
     [Tooltip("Tiempo de enfriamiento")]
-    [SerializeField,Rename("Cooldown")] private float _dashingCooldown = 1f;
-    
+    [SerializeField, Rename("Cooldown")] private float _dashingCooldown = 1f;
+
     [Header("Slide/Crouch Settings")]
     [Tooltip("Afecta el tiempo en que no puedes moverte mientras esta el slide")]
     [SerializeField] private float _slideDuration = 1f;
     [Tooltip("Tiempo corriendo requerido para poder realizar el slide")]
     [SerializeField] private float _timeToSlide = 3f;
-    
+
     [Header("Player General Settings")]
     [Tooltip("Visual en uso del personaje")]
     [SerializeField] private GameObject _playerVisual;
@@ -46,6 +52,9 @@ public class PlayerStateMachine : MonoBehaviour
     private bool _canMove;
     private bool _canSlide;
     private bool _canJump;
+    private bool _canWallJump;
+    private bool _isHittingStickyWall;
+    private bool _isHoldingFromStickyWall;
 
     private PlayerBaseState _currentState;
     private PlayerStateFactory _stateFactory;
@@ -57,18 +66,25 @@ public class PlayerStateMachine : MonoBehaviour
     public SpriteRenderer PlayerVisualSprite => _playerVisualSprite;
     public Animator PlayerVisualAnimator => _playerVisualAnimator;
     public bool IsFlipped => PlayerVisualSprite?.flipX ?? false;
-    
+
     //Movement
     public float MovementSpeed => _movementSpeed;
     public float RunSpeedMultiplier => _runSpeedMultiplier;
     public bool CanMove => _canMove;
     public LayerMask GroundLayout => _groundLayer;
-    
+
     //Jump
     public float JumpForce => _jumpForce;
     public bool IsGrounded => _isGrounded;
     public bool CanJump => _canJump;
     public LayerMask JumpableGround => _jumpableGroundLayer;
+
+    //WallJump
+    public float WallJumpForce => _wallJumpForce;
+    public float WallJumpDuration => _wallJumpDuration;
+    public bool CanWallJump => _canWallJump;
+    public bool IsHoldingFromtickyWall => _isHoldingFromStickyWall;
+    public bool isHittingStickyWall { get => _isHittingStickyWall; set => _isHittingStickyWall = value; }
     
     //Dash
     public float DashingForce => _dashingForce;
@@ -119,6 +135,7 @@ public class PlayerStateMachine : MonoBehaviour
         _currentState.FixedUpdateStates();
     }
 
+
     private void SetVisuals(GameObject newVisual)
     {
         _playerVisualSprite = newVisual.GetComponent<SpriteRenderer>();
@@ -128,12 +145,14 @@ public class PlayerStateMachine : MonoBehaviour
     private void handleBoxCastColliders(Vector2 direction)
     {
         var angle = 0f;
-        var distance = .1f;
+        var distance = .01f;
         var origin = _collider.bounds.center;
         var size = _collider.bounds.size;
 
         var collisionsOnPlayerDirection = Physics2D.BoxCastAll(origin, size, angle, direction, distance);
         _canMove = collisionsOnPlayerDirection.Length <= 1; //always hitting player collider
+
+        _isHoldingFromStickyWall = _isHittingStickyWall && !_canMove; //more than 1 collision in that direction and is hitting a sticky wall
 
         _isGrounded = Physics2D.BoxCast(origin, size, angle, Vector2.down, distance, _groundLayer);
         _canJump = Physics2D.BoxCast(origin, size, angle, Vector2.down, distance, _jumpableGroundLayer);

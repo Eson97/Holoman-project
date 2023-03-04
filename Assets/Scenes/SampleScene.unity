@@ -1359,6 +1359,8 @@ MonoBehaviour:
   _jumpableGroundLayer:
     serializedVersion: 2
     m_Bits: 64
+  _wallJumpDuration: 1
+  _wallJumpForce: 5
   _dashingForce: 24
   _dashingTime: 0.2
   _dashingCooldown: 1
@@ -1686,7 +1688,7 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!212 &2128387468
 SpriteRenderer:
