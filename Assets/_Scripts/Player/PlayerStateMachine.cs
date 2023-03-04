@@ -16,7 +16,7 @@ public class PlayerStateMachine : MonoBehaviour
     [Tooltip("Fuerza de salto")]
     [SerializeField,Rename("Force")] private float _jumpForce = 22f;
     [Tooltip("Layers sobre los cuales se puede saltar")]
-    [SerializeField] private LayerMask _jumpableGroundlayer;
+    [SerializeField] private LayerMask _jumpableGroundLayer;
     
     [Header("Dash Settings")]
     [Tooltip("Fuerza del dash (afecta la distancia)")]
@@ -28,7 +28,7 @@ public class PlayerStateMachine : MonoBehaviour
     
     [Header("Slide/Crouch Settings")]
     [Tooltip("Afecta el tiempo en que no puedes moverte mientras esta el slide")]
-    [SerializeField,Rename("Duration")] private float _slideDuration = 1f;
+    [SerializeField] private float _slideDuration = 1f;
     [Tooltip("Tiempo corriendo requerido para poder realizar el slide")]
     [SerializeField] private float _timeToSlide = 3f;
     
@@ -68,7 +68,7 @@ public class PlayerStateMachine : MonoBehaviour
     public float JumpForce => _jumpForce;
     public bool IsGrounded => _isGrounded;
     public bool CanJump => _canJump;
-    public LayerMask JumpableGround => _jumpableGroundlayer;
+    public LayerMask JumpableGround => _jumpableGroundLayer;
     
     //Dash
     public float DashingForce => _dashingForce;
@@ -125,15 +125,18 @@ public class PlayerStateMachine : MonoBehaviour
         _playerVisualAnimator = newVisual.GetComponent<Animator>();
     }
 
-    private void handleBoxCastColliders(Vector2 dir)
+    private void handleBoxCastColliders(Vector2 direction)
     {
         var angle = 0f;
         var distance = .1f;
-        var canMoveBoxSize = new Vector2(_collider.bounds.size.x, _collider.bounds.size.y - 0.001f);
+        var origin = _collider.bounds.center;
+        var size = _collider.bounds.size;
 
-        _canMove = !Physics2D.BoxCast(_collider.bounds.center, canMoveBoxSize, angle, dir, distance, _jumpableGroundlayer);
-        _isGrounded = Physics2D.BoxCast(_collider.bounds.center, _collider.bounds.size, angle, Vector2.down, distance, _groundLayer);
-        _canJump = Physics2D.BoxCast(_collider.bounds.center, _collider.bounds.size, angle, Vector2.down, distance, _jumpableGroundlayer);
+        var collisionsOnPlayerDirection = Physics2D.BoxCastAll(origin, size, angle, direction, distance);
+        _canMove = collisionsOnPlayerDirection.Length <= 1; //always hitting player collider
+
+        _isGrounded = Physics2D.BoxCast(origin, size, angle, Vector2.down, distance, _groundLayer);
+        _canJump = Physics2D.BoxCast(origin, size, angle, Vector2.down, distance, _jumpableGroundLayer);
     }
     private void handleTimeToSlide()
     {

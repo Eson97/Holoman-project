@@ -1356,7 +1356,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 320
   _jumpForce: 22
-  _jumpableGroundlayer:
+  _jumpableGroundLayer:
     serializedVersion: 2
     m_Bits: 64
   _dashingForce: 24
@@ -1386,6 +1386,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: d943ae5d6d7e573428a0a5528efd79f1, type: 2}
+    - target: {fileID: 2730072504389566349, guid: 04d93369cc6d1cc4fabd773d8d256b9b, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4021998956678354236, guid: 04d93369cc6d1cc4fabd773d8d256b9b, type: 3}
       propertyPath: m_SortingOrder
       value: 1
