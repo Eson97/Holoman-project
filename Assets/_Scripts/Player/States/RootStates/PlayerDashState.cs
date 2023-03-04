@@ -34,11 +34,14 @@ public class PlayerDashState : PlayerBaseState, IRootState
         {
             SwitchState(Factory.Grounded());
         }
-        else if (!Ctx.IsGrounded /* is touching a stickyWall */)
+        else if (!Ctx.IsGrounded && Ctx.IsHoldingFromStickyWall)
+        {
+            SwitchState(Factory.StickyWall());
+        }
+        else if(!Ctx.IsGrounded)
         {
             SwitchState(Factory.Fall());
         }
-        //else: is falling
     }
 
     public void InitializeSubState()

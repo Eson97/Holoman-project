@@ -52,6 +52,10 @@ public class PlayerJumpState : PlayerBaseState, IRootState
         {
             SwitchState(Factory.Dashing());
         }
+        else if(!Ctx.IsGrounded && Ctx.IsHoldingFromStickyWall)
+        {
+            SwitchState(Factory.StickyWall());
+        }
         else if (Ctx.IsGrounded)
         {
             SwitchState(Factory.Grounded());

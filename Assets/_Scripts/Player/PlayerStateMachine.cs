@@ -83,7 +83,7 @@ public class PlayerStateMachine : MonoBehaviour
     public float WallJumpForce => _wallJumpForce;
     public float WallJumpDuration => _wallJumpDuration;
     public bool CanWallJump => _canWallJump;
-    public bool IsHoldingFromtickyWall => _isHoldingFromStickyWall;
+    public bool IsHoldingFromStickyWall => _isHoldingFromStickyWall;
     public bool isHittingStickyWall { get => _isHittingStickyWall; set => _isHittingStickyWall = value; }
     
     //Dash
