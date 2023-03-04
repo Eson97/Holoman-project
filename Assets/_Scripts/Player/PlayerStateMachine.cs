@@ -56,7 +56,7 @@ public class PlayerStateMachine : MonoBehaviour
     public GameObject PlayerVisual => _playerVisual;
     public SpriteRenderer PlayerVisualSprite => _playerVisualSprite;
     public Animator PlayerVisualAnimator => _playerVisualAnimator;
-    public bool IsFlipped => PlayerVisualSprite.flipX;
+    public bool IsFlipped => PlayerVisualSprite?.flipX ?? false;
     
     //Movement
     public float MovementSpeed => _movementSpeed;
@@ -147,6 +147,8 @@ public class PlayerStateMachine : MonoBehaviour
     }
     private void handleVisualSpriteFlip(Vector2 dir)
     {
+        if (_playerVisualSprite == null) return;
+
         if (dir.x < -0.01f)
             _playerVisualSprite.flipX = true;
         else if (dir.x > 0.01f)
