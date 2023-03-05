@@ -1086,7 +1086,7 @@ GameObject:
   - component: {fileID: 574370809}
   - component: {fileID: 574370808}
   - component: {fileID: 574370807}
-  m_Layer: 7
+  m_Layer: 6
   m_Name: Square (9)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1625,7 +1625,7 @@ MonoBehaviour:
   _jumpableGroundLayer:
     serializedVersion: 2
     m_Bits: 64
-  _wallJumpDuration: 1
+  _wallJumpDuration: 0.15
   _wallJumpForce: 5
   _dashingForce: 24
   _dashingTime: 0.2

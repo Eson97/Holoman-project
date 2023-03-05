@@ -36,7 +36,7 @@ public class PlayerFallState : PlayerBaseState, IRootState
         }
         else if(!Ctx.IsGrounded && Ctx.IsHoldingFromStickyWall)
         {
-            SwitchState(Factory.StickyWall());
+            SwitchState(Factory.HoldingStickyWall());
         }
         else if (Ctx.IsGrounded)
         {

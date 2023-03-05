@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerStickyWallState : PlayerBaseState, IRootState
+public class PlayerHoldingStickyWallState : PlayerBaseState, IRootState
 {
-    public PlayerStickyWallState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory, PlayerStates type) 
+    public PlayerHoldingStickyWallState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory, PlayerStates type) 
         : base(currentContext, playerStateFactory, type)
     {
         IsRootState = true;
@@ -37,9 +37,9 @@ public class PlayerStickyWallState : PlayerBaseState, IRootState
         {
             SwitchState(Factory.Fall());
         }
-        else if(Ctx.IsHoldingFromStickyWall && PlayerInputManager.Instance.IsJumpPressed)
+        else if(Ctx.IsHoldingFromStickyWall && PlayerInputManager.Instance.IsJumpPressedThisFrame)
         {
-            //walljump
+            SwitchState(Factory.WallJump());
         }
     }
 

@@ -21,7 +21,8 @@ public class PlayerStateFactory
         _states.Add(PlayerStates.Dashing,   new PlayerDashState(_context, this, PlayerStates.Dashing));
         _states.Add(PlayerStates.Crouch,    new PlayerCrouchState(_context, this, PlayerStates.Crouch));
         _states.Add(PlayerStates.Slide,     new PlayerSlideState(_context, this, PlayerStates.Slide));
-        _states.Add(PlayerStates.StickyWall, new PlayerStickyWallState(_context, this, PlayerStates.StickyWall));
+        _states.Add(PlayerStates.WallJump,  new PlayerWallJumpState(_context, this, PlayerStates.WallJump));
+        _states.Add(PlayerStates.HoldingStickyWall, new PlayerHoldingStickyWallState(_context, this, PlayerStates.HoldingStickyWall));
     }
 
     public PlayerBaseState Idle() => _states[PlayerStates.Idle];
@@ -33,7 +34,8 @@ public class PlayerStateFactory
     public PlayerBaseState Dashing() => _states[PlayerStates.Dashing];
     public PlayerBaseState Crouch() => _states[PlayerStates.Crouch];
     public PlayerBaseState Slide() => _states[PlayerStates.Slide];
-    public PlayerBaseState StickyWall() => _states[PlayerStates.StickyWall];
+    public PlayerBaseState HoldingStickyWall() => _states[PlayerStates.HoldingStickyWall];
+    public PlayerBaseState WallJump() => _states[PlayerStates.WallJump];
 
 }
 public enum PlayerStates
@@ -48,5 +50,7 @@ public enum PlayerStates
     Dashing,
     Crouch,
     Slide,
-    StickyWall,
+    HoldingStickyWall,
+    WallJump,
+
 }

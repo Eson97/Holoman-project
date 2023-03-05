@@ -14,6 +14,7 @@ public class PlayerInputManager : Singleton<PlayerInputManager>
     private bool _isCrouchPressed;
 
     public bool IsJumpPressed => _isJumpPressed;
+    public bool IsJumpPressedThisFrame => _playerInputActions?.Player.Jump.WasPerformedThisFrame() ?? false;
     public bool IsRunPressed => _isRunPressed;
     public bool IsDashPressed => _isDashPressed;
     public bool IsCrouchPressed => _isCrouchPressed;
