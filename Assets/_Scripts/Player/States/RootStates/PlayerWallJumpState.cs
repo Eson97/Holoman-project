@@ -35,7 +35,7 @@ public class PlayerWallJumpState : PlayerBaseState, IRootState
         {
             SwitchState(Factory.HoldingStickyWall());
         }
-        else if (PlayerInputManager.Instance.IsDashPressed)
+        else if (Ctx.PlayerController.IsDashPressed)
         {
             SwitchState(Factory.Dashing());
         }
@@ -56,7 +56,7 @@ public class PlayerWallJumpState : PlayerBaseState, IRootState
 
     private IEnumerator WallJump()
     {
-        var dirX = PlayerInputManager.Instance.CurrentMovementInput.normalized.x;
+        var dirX = Ctx.PlayerController.MoveDirection.normalized.x;
         Ctx.Rigidbody.velocity = new Vector2(dirX * -(Ctx.WallJumpForce), Ctx.JumpForce);
 
         yield return new WaitForSeconds(Ctx.WallJumpDuration);

@@ -23,13 +23,13 @@ public class PlayerRunState : PlayerBaseState
     public override void UpdateState()
     {
         Ctx.StartRunningTime += Time.deltaTime;
-        var dir = PlayerInputManager.Instance.CurrentMovementInput.normalized;
+        var dir = Ctx.PlayerController.MoveDirection.normalized;
         CheckSwitchStates();
     }
 
     public override void FixedUpdateState()
     {
-        var dirX = PlayerInputManager.Instance.CurrentMovementInput.normalized.x;
+        var dirX = Ctx.PlayerController.MoveDirection.normalized.x;
         var VelocityX = dirX * Ctx.MovementSpeed * Ctx.RunSpeedMultiplier * Time.fixedDeltaTime;
 
         if(Ctx.CanMove)
@@ -40,15 +40,15 @@ public class PlayerRunState : PlayerBaseState
 
     public override void CheckSwitchStates()
     {
-        if (!PlayerInputManager.Instance.IsMoving)
+        if (!Ctx.PlayerController.IsMoving)
         {
             SwitchState(Factory.Idle());
         }
-        else if (PlayerInputManager.Instance.IsCrouchPressed && PlayerInputManager.Instance.IsMoving && Ctx.CanSlide)
+        else if (Ctx.PlayerController.IsCrouchPressed && Ctx.PlayerController.IsMoving && Ctx.CanSlide)
         {
             SwitchState(Factory.Slide());
         }
-        else if(PlayerInputManager.Instance.IsMoving && !PlayerInputManager.Instance.IsRunPressed)
+        else if(Ctx.PlayerController.IsMoving && !Ctx.PlayerController.IsRunPressed)
         {
             SwitchState(Factory.Walk());
         }

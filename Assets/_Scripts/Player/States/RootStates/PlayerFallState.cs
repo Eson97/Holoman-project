@@ -30,7 +30,7 @@ public class PlayerFallState : PlayerBaseState, IRootState
     }
     public override void CheckSwitchStates()
     {
-        if (PlayerInputManager.Instance.IsDashPressed && Ctx.CanDash)
+        if (Ctx.PlayerController.IsDashPressed && Ctx.CanDash)
         {
             SwitchState(Factory.Dashing());
         }
@@ -47,11 +47,11 @@ public class PlayerFallState : PlayerBaseState, IRootState
 
     public void InitializeSubState()
     {
-        if (PlayerInputManager.Instance.IsMoving && PlayerInputManager.Instance.IsRunPressed)
+        if (Ctx.PlayerController.IsMoving && Ctx.PlayerController.IsRunPressed)
         {
             SetSubState(Factory.Run());
         }
-        else if (PlayerInputManager.Instance.IsMoving && !PlayerInputManager.Instance.IsRunPressed)
+        else if (Ctx.PlayerController.IsMoving && !Ctx.PlayerController.IsRunPressed)
         {
             SetSubState(Factory.Walk());
         }

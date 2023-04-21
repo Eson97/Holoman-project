@@ -37,19 +37,19 @@ public class PlayerSlideState : PlayerBaseState
 
     public override void CheckSwitchStates()
     {
-        if (PlayerInputManager.Instance.IsMoving && PlayerInputManager.Instance.IsRunPressed)
+        if (Ctx.PlayerController.IsMoving && Ctx.PlayerController.IsRunPressed)
         {
             SwitchState(Factory.Run());
         }
-        else if (PlayerInputManager.Instance.IsMoving && !PlayerInputManager.Instance.IsRunPressed)
+        else if (Ctx.PlayerController.IsMoving && !Ctx.PlayerController.IsRunPressed)
         {
             SwitchState(Factory.Walk());
         }
-        else if (PlayerInputManager.Instance.IsCrouchPressed && Ctx.CanCrouch)
+        else if (Ctx.PlayerController.IsCrouchPressed && Ctx.CanCrouch)
         {
             SwitchState(Factory.Crouch());
         }
-        else if(!PlayerInputManager.Instance.IsMoving && !PlayerInputManager.Instance.IsCrouchPressed)
+        else if(!Ctx.PlayerController.IsMoving && !Ctx.PlayerController.IsCrouchPressed)
         {
             SwitchState(Factory.Idle());
         }

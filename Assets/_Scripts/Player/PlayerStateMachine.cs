@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerController))]
 public class PlayerStateMachine : MonoBehaviour
 {
     [Header("Movement Settings")]
@@ -50,6 +51,7 @@ public class PlayerStateMachine : MonoBehaviour
     private Collider2D _collider;
     private SpriteRenderer _playerVisualSprite;
     private Animator _playerVisualAnimator;
+    private PlayerController _playerController;
 
     private bool _isGrounded;
     private bool _canMove;
@@ -67,6 +69,7 @@ public class PlayerStateMachine : MonoBehaviour
     public Collider2D Collider => _collider;
     public GameObject PlayerVisual => _playerVisual;
     public SpriteRenderer PlayerVisualSprite => _playerVisualSprite;
+    public PlayerController PlayerController => _playerController;
     public Animator PlayerVisualAnimator => _playerVisualAnimator;
     public bool IsFlipped => PlayerVisualSprite?.flipX ?? false;
 
@@ -112,6 +115,7 @@ public class PlayerStateMachine : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody2D>();
         _collider = GetComponent<Collider2D>();
+        _playerController = GetComponent<PlayerController>();
 
         SetVisuals(_playerVisual);
     }
@@ -125,7 +129,7 @@ public class PlayerStateMachine : MonoBehaviour
     }
     private void Update()
     {
-        var dir = PlayerInputManager.Instance.CurrentMovementInput.normalized * Vector2.right;
+        var dir = _playerController.MoveDirection.normalized * Vector2.right;
         
         handleBoxCastColliders(dir);
         handleVisualSpriteFlip(dir);

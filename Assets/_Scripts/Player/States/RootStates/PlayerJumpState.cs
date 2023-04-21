@@ -11,7 +11,6 @@ public class PlayerJumpState : PlayerBaseState, IRootState
         : base(currentContext, playerStateFactory, type)
     {
         IsRootState = true;
-        PlayerInputManager.Instance.OnJumpCanceledDelegate += PlayerInputManager_OnJumpCanceledDelegate;
     }
 
     public override void EnterState()
@@ -44,11 +43,16 @@ public class PlayerJumpState : PlayerBaseState, IRootState
         {
             _falling = true;
         }
+        if (!Ctx.PlayerController.IsJumpPressed)
+        {
+            Ctx.Rigidbody.velocity = new Vector2(Ctx.Rigidbody.velocity.x, 0f);
+            _falling = true;
+        }
     }
 
     public override void CheckSwitchStates()
     {
-        if (PlayerInputManager.Instance.IsDashPressed && Ctx.CanDash)
+        if (Ctx.PlayerController.IsDashPressed && Ctx.CanDash)
         {
             SwitchState(Factory.Dashing());
         }
@@ -68,11 +72,11 @@ public class PlayerJumpState : PlayerBaseState, IRootState
 
     public void InitializeSubState()
     {
-        if (PlayerInputManager.Instance.IsMoving && PlayerInputManager.Instance.IsRunPressed)
+        if (Ctx.PlayerController.IsMoving && Ctx.PlayerController.IsRunPressed)
         {
             SetSubState(Factory.Run());
         }
-        else if (PlayerInputManager.Instance.IsMoving && !PlayerInputManager.Instance.IsRunPressed)
+        else if (Ctx.PlayerController.IsMoving && !Ctx.PlayerController.IsRunPressed)
         {
             SetSubState(Factory.Walk());
         }
@@ -80,11 +84,5 @@ public class PlayerJumpState : PlayerBaseState, IRootState
         {
             SetSubState(Factory.Idle());
         }
-    }
-
-    private void PlayerInputManager_OnJumpCanceledDelegate()
-    {
-        Ctx.Rigidbody.velocity = new Vector2(Ctx.Rigidbody.velocity.x, 0f);
-        _falling = true;
     }
 }

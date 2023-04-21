@@ -30,11 +30,11 @@ public class PlayerGroundedState : PlayerBaseState, IRootState
 
     public override void CheckSwitchStates()
     {
-        if (PlayerInputManager.Instance.IsDashPressed && Ctx.CanDash)
+        if (Ctx.PlayerController.IsDashPressed && Ctx.CanDash)
         {
             SwitchState(Factory.Dashing());
         }
-        else if (PlayerInputManager.Instance.IsJumpPressed && Ctx.CanJump)
+        else if (Ctx.PlayerController.IsJumpPressed && Ctx.CanJump)
         {
             SwitchState(Factory.Jump());
         }
@@ -46,11 +46,11 @@ public class PlayerGroundedState : PlayerBaseState, IRootState
     
     public void InitializeSubState()
     {
-        if (PlayerInputManager.Instance.IsMoving && PlayerInputManager.Instance.IsRunPressed)
+        if (Ctx.PlayerController.IsMoving && Ctx.PlayerController.IsRunPressed)
         {
             SetSubState(Factory.Run());
         }
-        else if (PlayerInputManager.Instance.IsMoving && !PlayerInputManager.Instance.IsRunPressed)
+        else if (Ctx.PlayerController.IsMoving && !Ctx.PlayerController.IsRunPressed)
         {
             SetSubState(Factory.Walk());
         }

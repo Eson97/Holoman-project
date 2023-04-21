@@ -37,7 +37,7 @@ public class PlayerHoldingStickyWallState : PlayerBaseState, IRootState
         {
             SwitchState(Factory.Fall());
         }
-        else if(Ctx.IsHoldingFromStickyWall && PlayerInputManager.Instance.IsJumpPressedThisFrame)
+        else if(Ctx.IsHoldingFromStickyWall && Ctx.PlayerController.IsJumpPressedThisFrame)
         {
             SwitchState(Factory.WallJump());
         }

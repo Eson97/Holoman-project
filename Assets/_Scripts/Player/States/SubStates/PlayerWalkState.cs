@@ -26,7 +26,7 @@ public class PlayerWalkState : PlayerBaseState
 
     public override void FixedUpdateState()
     {
-        var dirX = PlayerInputManager.Instance.CurrentMovementInput.x;
+        var dirX = Ctx.PlayerController.MoveDirection.x;
         var VelocityX = dirX * Ctx.MovementSpeed * Time.fixedDeltaTime;
 
         if(Ctx.CanMove)
@@ -37,15 +37,15 @@ public class PlayerWalkState : PlayerBaseState
 
     public override void CheckSwitchStates()
     {
-        if(PlayerInputManager.Instance.IsMoving && PlayerInputManager.Instance.IsRunPressed)
+        if(Ctx.PlayerController.IsMoving && Ctx.PlayerController.IsRunPressed)
         {
             SwitchState(Factory.Run());
         }
-        else if (!PlayerInputManager.Instance.IsMoving && PlayerInputManager.Instance.IsCrouchPressed && Ctx.CanCrouch)
+        else if (!Ctx.PlayerController.IsMoving && Ctx.PlayerController.IsCrouchPressed && Ctx.CanCrouch)
         {
             SwitchState(Factory.Crouch());
         }
-        else if (!PlayerInputManager.Instance.IsMoving)
+        else if (!Ctx.PlayerController.IsMoving)
         {
             SwitchState(Factory.Idle());
         }
